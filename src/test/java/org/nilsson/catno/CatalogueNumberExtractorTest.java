@@ -33,4 +33,18 @@ public class CatalogueNumberExtractorTest {
         assertThat(catalogueNumber).containsPattern("[A-Z]?" + expected + "[A-Z]?");
 
     }
+
+    @Test
+    public void shouldPickCorrectCatalogueNumber() {
+        String expected = "31058 I";
+        String catalogueNumber = CatalogueNumberExtractor.extractCatalogueNumber("Sa\n" +
+                "M33\n" +
+                "\n" +
+                "vV\n" +
+                "KATALOG-NR.\n" +
+                "31058 I");
+
+        assertThat(catalogueNumber).isEqualTo(expected);
+
+    }
 }

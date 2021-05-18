@@ -11,7 +11,6 @@ public class CatalogueNumberExtractor {
     private static final Logger LOG = LogManager.getLogger(CatalogueNumberExtractor.class);
 
     public static String extractCatalogueNumber(String text) {
-
         LOG.debug(Arrays.stream(text.split(System.lineSeparator())).collect(Collectors.toList()));
 
         List<String> collect = Arrays.stream(text.split(System.lineSeparator()))
@@ -23,7 +22,12 @@ public class CatalogueNumberExtractor {
             return null;
         }
         if (collect.size() != 1) {
-            LOG.info("multiple catalogue numbers match, picking first of: " + collect);
+            LOG.info("multiple catalogue numbers match, attempting to pick correct: " + collect);
+
+            return collect.stream()
+                    .filter(s -> s.length() >= 5 && s.length() <= 10)
+                    .findFirst()
+                    .orElse(collect.get(0));
         }
         return collect.get(0);
 
