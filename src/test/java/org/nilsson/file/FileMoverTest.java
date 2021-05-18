@@ -39,7 +39,7 @@ public class FileMoverTest {
     public void shouldCopyFile() throws IOException {
         File.createTempFile("test", "a", srcFolder.toFile());
 
-        FileMover.moveFiles(srcFolder.toString(), destFolder.toString());
+        FileMover.moveFiles(srcFolder, destFolder);
         assertThat(destFolder.toFile()).isDirectoryContaining(file -> file.getName().matches("test.*a"));
 
     }
@@ -51,7 +51,7 @@ public class FileMoverTest {
             TimeUnit.MILLISECONDS.sleep(50);
         }
 
-        FileMover.moveFiles(srcFolder.toString(), destFolder.toString());
+        FileMover.moveFiles(srcFolder, destFolder);
 
         assertThat(Files.list(destFolder)).hasSize(2);
         assertThat(destFolder.toFile())

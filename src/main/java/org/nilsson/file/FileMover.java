@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class FileMover {
-    private static final String SOURCE_DIR = "/home/andreas/Bilder/lp";
-    private static final String TARGET_DIR = "/home/andreas/Bilder/interesting_lp";
+    private static final Path SOURCE_DIR = Paths.get("/home/andreas/Bilder/lp");
+    private static final Path TARGET_DIR = Paths.get("/home/andreas/Bilder/interesting_lp");
     public static final int EVERY_NTH_FILE = 5;
 
-    public static void moveFiles(String source, String target) {
+    public static void moveFiles(Path source, Path target) {
         List<Path> files;
         try {
             files = getFilesOrderedByModified(source);
@@ -27,7 +27,7 @@ public class FileMover {
                 if (i % EVERY_NTH_FILE == 0) {
                     Path sourceFilePath = files.get(i);
                     Path fileName = sourceFilePath.getFileName();
-                    Files.copy(sourceFilePath, Paths.get(target, fileName.toString()), REPLACE_EXISTING);
+                    Files.copy(sourceFilePath, target.resolve(fileName.toString()), REPLACE_EXISTING);
                 }
             }
         } catch (IOException e) {
@@ -35,9 +35,9 @@ public class FileMover {
         }
     }
 
-    private static List<Path> getFilesOrderedByModified(String source) {
+    private static List<Path> getFilesOrderedByModified(Path source) {
         List<Path> files;
-        File[] listFiles = Paths.get(source).toFile().listFiles();
+        File[] listFiles = source.toFile().listFiles();
         Arrays.sort(listFiles, Comparator.comparing(File::lastModified));
         files = Arrays.stream(listFiles)
                 .map(File::toPath)
@@ -46,7 +46,7 @@ public class FileMover {
     }
 
     public static void main(String[] args) {
-        moveFiles("/home/andreas/Bilder/lp", "/home/andreas/Bilder/interesting_lp");
+        moveFiles(SOURCE_DIR, TARGET_DIR);
     }
 
 }
