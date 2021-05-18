@@ -16,15 +16,14 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class FileMover {
     private static final Path SOURCE_DIR = Paths.get("/home/andreas/Bilder/lp");
     private static final Path TARGET_DIR = Paths.get("/home/andreas/Bilder/interesting_lp");
-    public static final int EVERY_NTH_FILE = 5;
 
-    public static void moveFiles(Path source, Path target) {
+    public static void moveEveryNthFiles(Path source, Path target, int everyNthFile) {
         List<Path> files;
         try {
             files = getFilesOrderedByModified(source);
 
             for (int i = 0; i < files.size(); i++) {
-                if (i % EVERY_NTH_FILE == 0) {
+                if (i % everyNthFile == 0) {
                     Path sourceFilePath = files.get(i);
                     Path fileName = sourceFilePath.getFileName();
                     Files.copy(sourceFilePath, target.resolve(fileName.toString()), REPLACE_EXISTING);
@@ -46,7 +45,7 @@ public class FileMover {
     }
 
     public static void main(String[] args) {
-        moveFiles(SOURCE_DIR, TARGET_DIR);
+        moveEveryNthFiles(SOURCE_DIR, TARGET_DIR, 5);
     }
 
 }

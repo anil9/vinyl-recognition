@@ -19,6 +19,7 @@ public class FileMoverTest {
     private static final Path resources = Paths.get("src", "test", "resources");
     private static final Path srcFolder = resources.resolve("srcFolder");
     private static final Path destFolder = resources.resolve("destFolder");
+    private static final int EVERY_NTH_FILE = 5;
 
 
     @Before
@@ -39,7 +40,7 @@ public class FileMoverTest {
     public void shouldCopyFile() throws IOException {
         File.createTempFile("test", "a", srcFolder.toFile());
 
-        FileMover.moveFiles(srcFolder, destFolder);
+        FileMover.moveEveryNthFiles(srcFolder, destFolder, EVERY_NTH_FILE);
         assertThat(destFolder.toFile()).isDirectoryContaining(file -> file.getName().matches("test.*a"));
 
     }
@@ -51,7 +52,7 @@ public class FileMoverTest {
             TimeUnit.MILLISECONDS.sleep(50);
         }
 
-        FileMover.moveFiles(srcFolder, destFolder);
+        FileMover.moveEveryNthFiles(srcFolder, destFolder, EVERY_NTH_FILE);
 
         assertThat(Files.list(destFolder)).hasSize(2);
         assertThat(destFolder.toFile())
