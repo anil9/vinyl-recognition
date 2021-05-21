@@ -15,6 +15,7 @@ public class OCRFacadeImpl implements OCRFacade {
         tesseract.setDatapath("src/main/resources/tessdata");
         tesseract.setLanguage("swe");
         tesseract.setPageSegMode(3);
+        tesseract.setTessVariable("user_defined_dpi", "270");
 //        tesseract.setOcrEngineMode(1);
 //        tesseract.setHocr(true);
         try {
