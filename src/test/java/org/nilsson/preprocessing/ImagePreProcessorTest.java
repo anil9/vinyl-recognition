@@ -14,18 +14,18 @@ import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ImagePreProcesserTest {
+public class ImagePreProcessorTest {
 
     private static final Path resources = Paths.get("src", "test", "resources");
     private static final Path imagesFolder = resources.resolve("images");
     private static final Path srcFolder = resources.resolve("srcFolder");
     private final String jpgImage = "skansens_spelmanslag.jpg";
     private final String tiffImage = "skansens_spelmanslag.tiff";
-    private ImagePreProcesser imagePreProcesser;
+    private ImagePreProcessor imagePreProcessor;
 
     @Before
     public void setUp() throws Exception {
-        imagePreProcesser = new ImagePreProcesser();
+        imagePreProcessor = new ImagePreProcessor();
         srcFolder.toFile().mkdirs();
         FileUtils.cleanDirectory(srcFolder.toFile());
 
@@ -42,7 +42,7 @@ public class ImagePreProcesserTest {
 
         assertThat(srcFolder).isDirectoryContaining(path -> path.endsWith(Path.of(jpgImage)));
 
-        imagePreProcesser.preProcess(srcFolder.resolve(Path.of(jpgImage)).toFile());
+        imagePreProcessor.preProcess(srcFolder.resolve(Path.of(jpgImage)).toFile());
 
         assertThat(Files.list(srcFolder)).hasSize(1);
         assertThat(srcFolder).isDirectoryContaining(path -> path.endsWith(Path.of(tiffImage)));
@@ -54,7 +54,7 @@ public class ImagePreProcesserTest {
 
         assertThat(srcFolder).isDirectoryContaining(path -> path.endsWith(Path.of(jpgImage)));
 
-        imagePreProcesser.preProcess(srcFolder.resolve(Path.of(jpgImage)).toFile());
+        imagePreProcessor.preProcess(srcFolder.resolve(Path.of(jpgImage)).toFile());
 
         BufferedImage image = ImageIO.read(srcFolder.resolve(Path.of(tiffImage)).toFile());
         assertThat(isGrayScale(image)).isTrue();

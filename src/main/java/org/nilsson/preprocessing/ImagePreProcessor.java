@@ -11,14 +11,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-public class ImagePreProcesser {
+public class ImagePreProcessor {
 
     private static final Path resources = Paths.get("src", "main", "resources");
     private static final Path images = resources.resolve("images");
     private final ConvertCmd convertCmd;
 
 
-    public ImagePreProcesser() {
+    public ImagePreProcessor() {
         convertCmd = new ConvertCmd();
     }
 
@@ -48,8 +48,8 @@ public class ImagePreProcesser {
 
     public static void main(String[] args) {
 
-        ImagePreProcesser imagePreProcesser = new ImagePreProcesser();
-        imagePreProcesser.preProcess(images.resolve("skansens_spelmanslag.jpg").toFile());
+        ImagePreProcessor imagePreProcessor = new ImagePreProcessor();
+        imagePreProcessor.preProcess(images.resolve("skansens_spelmanslag.jpg").toFile());
     }
 
 }

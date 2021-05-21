@@ -4,7 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.nilsson.catno.CatalogueNumberExtractor;
 import org.nilsson.file.FileMover;
 import org.nilsson.ocr.OCRFacadeImpl;
-import org.nilsson.preprocessing.ImagePreProcesser;
+import org.nilsson.preprocessing.ImagePreProcessor;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +23,10 @@ public class App {
         FileUtils.cleanDirectory(TARGET_DIR.toFile());
         FileMover.moveEveryNthFiles(SOURCE_DIR, TARGET_DIR, 5);
 
-        ImagePreProcesser imagePreProcesser = new ImagePreProcesser();
+        ImagePreProcessor imagePreProcessor = new ImagePreProcessor();
         File[] jpgFiles = getSortedJpgFiles();
         if (jpgFiles != null) {
-            imagePreProcesser.preProcess(jpgFiles);
+            imagePreProcessor.preProcess(jpgFiles);
         }
 
         OCRFacadeImpl ocrFacade = new OCRFacadeImpl();
