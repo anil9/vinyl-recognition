@@ -30,6 +30,9 @@ public class ImagePreProcesser {
 
         IMOperation imOperation = new IMOperation();
         imOperation.format("TIFF");
+//        imOperation.crop(0, 0, 0, 900);
+//        imOperation.crop(0, 0, 0, -500);
+//        imOperation.crop(0, 0, 2000, 0);
         imOperation.addSubOperation(gmOperation);
         imOperation.addImage();
 
