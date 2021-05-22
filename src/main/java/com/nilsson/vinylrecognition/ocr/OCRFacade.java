@@ -1,4 +1,4 @@
-package org.nilsson.ocr;
+package com.nilsson.vinylrecognition.ocr;
 
 import java.io.File;
 

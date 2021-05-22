@@ -1,7 +1,7 @@
-package org.nilsson.catno;
+package com.nilsson.vinylrecognition.catno;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +12,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CatalogueNumberExtractor {
-    private static final Logger LOG = LogManager.getLogger(CatalogueNumberExtractor.class);
+    //    private static final Logger LOG = LogManager.getLogger(CatalogueNumberExtractor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CatalogueNumberExtractor.class);
     public static final String CATALOGUE_REGEX = "([A-Z0-9]+([ \\-][A-Z0-9]+)*){3,}";
     public static final String CATALOGUE_WHOLE_LINE_REGEX = "^" + CATALOGUE_REGEX + "$";
     private static Pattern patternForCatalogue = Pattern.compile(CATALOGUE_REGEX);
@@ -20,7 +21,7 @@ public class CatalogueNumberExtractor {
     private static Set<String> BLOCKED_WORDS = Set.of("STEREO", "APM", "RPM");
 
     public static String extractCatalogueNumber(String text) {
-        LOG.debug(Arrays.stream(text.split(System.lineSeparator())).collect(Collectors.toList()));
+        LOG.debug(Arrays.stream(text.split(System.lineSeparator())).collect(Collectors.toList()).toString());
 
         List<String> collect = findCatalogueNumberWholeLine(text);
         collect.addAll(findCatalogueNumberWholeWords(text));
@@ -31,7 +32,7 @@ public class CatalogueNumberExtractor {
             return null;
         }
         if (collect.size() != 1) {
-            LOG.info("multiple catalogue numbers match, attempting to pick correct: {}" + collect);
+            LOG.info("multiple catalogue numbers match, attempting to pick correct: {}", collect);
 
             String picked = collect.stream()
                     .filter(s -> s.length() >= 5 && s.length() <= 14)
@@ -50,7 +51,7 @@ public class CatalogueNumberExtractor {
                 .filter(Matcher::find)
                 .map(matcher -> matcher.group(0))
 //                .filter(s -> s.matches(CATALOGUE_REGEX))
-                .peek(System.out::println)
+                .peek(LOG::debug)
                 .filter(s -> s.matches(".*\\d+.*"))
                 .filter(withoutBlockedWords())
                 .filter(s -> s.length() > 2)

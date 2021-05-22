@@ -1,4 +1,4 @@
-package org.nilsson.file;
+package com.nilsson.vinylrecognition.file;
 
 import java.io.File;
 import java.io.IOException;

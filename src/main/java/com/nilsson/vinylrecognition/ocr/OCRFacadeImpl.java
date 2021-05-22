@@ -1,4 +1,4 @@
-package org.nilsson.ocr;
+package com.nilsson.vinylrecognition.ocr;
 
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;

@@ -1,6 +1,7 @@
-package org.nilsson.ocr;
+package com.nilsson.vinylrecognition.ocr;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -23,9 +24,11 @@ public class OCRFacadeImplTest {
                 .contains("ZARAH LEANDER");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowExceptionIfFileDoesntExist() {
         File file = images.resolve("zarah3.tiff").toFile();
-        new OCRFacadeImpl().extractTextFromImage(file);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> new OCRFacadeImpl().extractTextFromImage(file));
+
     }
 }

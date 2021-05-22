@@ -1,4 +1,4 @@
-package org.nilsson.preprocessing;
+package com.nilsson.vinylrecognition.preprocessing;
 
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.GMOperation;

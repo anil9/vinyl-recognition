@@ -1,9 +1,9 @@
-package org.nilsson.preprocessing;
+package com.nilsson.vinylrecognition.preprocessing;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -23,7 +23,7 @@ public class ImagePreProcessorTest {
     private final String tiffImage = "skansens_spelmanslag.tiff";
     private ImagePreProcessor imagePreProcessor;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         imagePreProcessor = new ImagePreProcessor();
         srcFolder.toFile().mkdirs();
@@ -31,7 +31,7 @@ public class ImagePreProcessorTest {
 
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         FileUtils.cleanDirectory(srcFolder.toFile());
     }

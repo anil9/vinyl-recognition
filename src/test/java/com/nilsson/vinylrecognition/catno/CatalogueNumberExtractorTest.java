@@ -1,10 +1,9 @@
-package org.nilsson.catno;
+package com.nilsson.vinylrecognition.catno;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 public class CatalogueNumberExtractorTest {
 
@@ -91,7 +90,7 @@ public class CatalogueNumberExtractorTest {
 
     }
 
-    @Ignore(value = "CatalogueNumberExtractor is not advanced enough to perfectly extract correct")
+    @Disabled(value = "CatalogueNumberExtractor is not advanced enough to perfectly extract correct")
     @Test
     public void shouldPickCorrectCatalogueNumber3() {
         String expected = "PL 40164";
@@ -134,7 +133,7 @@ public class CatalogueNumberExtractorTest {
 
     }
 
-    @Ignore(value = "CatalogueNumberExtractor is not advanced enough to perfectly extract correct")
+    @Disabled(value = "CatalogueNumberExtractor is not advanced enough to perfectly extract correct")
     @Test
     public void shouldPickCorrectCatalogueNumber4() {
         String expected = "LBLP 008";
