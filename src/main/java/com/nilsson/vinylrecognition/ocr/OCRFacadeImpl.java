@@ -6,16 +6,18 @@ import net.sourceforge.tess4j.TesseractException;
 import java.io.File;
 
 public class OCRFacadeImpl implements OCRFacade {
+
+    private final Tesseract tesseract;
+
+    public OCRFacadeImpl(Tesseract tesseract) {
+        this.tesseract = tesseract;
+    }
+
     @Override
     public String extractTextFromImage(File image) {
-        if(!image.exists()){
+        if (!image.exists()) {
             throw new IllegalArgumentException("Image doesn't exist: " + image.getAbsolutePath());
         }
-        Tesseract tesseract = new Tesseract();
-        tesseract.setDatapath("src/main/resources/tessdata");
-        tesseract.setLanguage("swe");
-        tesseract.setPageSegMode(3);
-        tesseract.setTessVariable("user_defined_dpi", "270");
 //        tesseract.setOcrEngineMode(1);
 //        tesseract.setHocr(true);
         try {

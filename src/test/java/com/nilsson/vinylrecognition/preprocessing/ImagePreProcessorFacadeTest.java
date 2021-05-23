@@ -1,6 +1,7 @@
 package com.nilsson.vinylrecognition.preprocessing;
 
 import org.apache.commons.io.FileUtils;
+import org.im4java.core.ConvertCmd;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,21 +15,20 @@ import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ImagePreProcessorTest {
+class ImagePreProcessorFacadeTest {
 
     private static final Path resources = Paths.get("src", "test", "resources");
     private static final Path imagesFolder = resources.resolve("images");
     private static final Path srcFolder = resources.resolve("srcFolder");
     private final String jpgImage = "skansens_spelmanslag.jpg";
     private final String tiffImage = "skansens_spelmanslag.tiff";
-    private ImagePreProcessor imagePreProcessor;
+    private ImagePreProcessorFacade imagePreProcessorFacade;
 
     @BeforeEach
     public void setUp() throws Exception {
-        imagePreProcessor = new ImagePreProcessor();
+        imagePreProcessorFacade = new ImagePreProcessorFacadeImpl(new ConvertCmd());
         srcFolder.toFile().mkdirs();
         FileUtils.cleanDirectory(srcFolder.toFile());
-
     }
 
     @AfterEach
@@ -37,24 +37,24 @@ public class ImagePreProcessorTest {
     }
 
     @Test
-    public void shouldConvertToTiff() throws IOException {
+    void shouldConvertToTiff() throws IOException {
         FileUtils.copyFile(imagesFolder.resolve(jpgImage).toFile(), srcFolder.resolve(jpgImage).toFile());
 
         assertThat(srcFolder).isDirectoryContaining(path -> path.endsWith(Path.of(jpgImage)));
 
-        imagePreProcessor.preProcess(srcFolder.resolve(Path.of(jpgImage)).toFile());
+        imagePreProcessorFacade.preProcess(srcFolder.resolve(Path.of(jpgImage)).toFile());
 
         assertThat(Files.list(srcFolder)).hasSize(1);
         assertThat(srcFolder).isDirectoryContaining(path -> path.endsWith(Path.of(tiffImage)));
     }
 
     @Test
-    public void shouldConvertImageToGrayScale() throws IOException {
+    void shouldConvertImageToGrayScale() throws IOException {
         FileUtils.copyFile(imagesFolder.resolve(jpgImage).toFile(), srcFolder.resolve(jpgImage).toFile());
 
         assertThat(srcFolder).isDirectoryContaining(path -> path.endsWith(Path.of(jpgImage)));
 
-        imagePreProcessor.preProcess(srcFolder.resolve(Path.of(jpgImage)).toFile());
+        imagePreProcessorFacade.preProcess(srcFolder.resolve(Path.of(jpgImage)).toFile());
 
         BufferedImage image = ImageIO.read(srcFolder.resolve(Path.of(tiffImage)).toFile());
         assertThat(isGrayScale(image)).isTrue();

@@ -11,17 +11,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-public class ImagePreProcessor {
+public class ImagePreProcessorFacadeImpl implements ImagePreProcessorFacade {
 
     private static final Path resources = Paths.get("src", "main", "resources");
     private static final Path images = resources.resolve("images");
     private final ConvertCmd convertCmd;
 
 
-    public ImagePreProcessor() {
-        convertCmd = new ConvertCmd();
+    public ImagePreProcessorFacadeImpl(ConvertCmd convertCmd) {
+        this.convertCmd = convertCmd;
     }
 
+    @Override
     public void preProcess(File... files) {
         GMOperation gmOperation = new GMOperation();
         gmOperation.addImage();
@@ -47,9 +48,8 @@ public class ImagePreProcessor {
     }
 
     public static void main(String[] args) {
-
-        ImagePreProcessor imagePreProcessor = new ImagePreProcessor();
-        imagePreProcessor.preProcess(images.resolve("skansens_spelmanslag.jpg").toFile());
+        ImagePreProcessorFacade imagePreProcessorFacade = new ImagePreProcessorFacadeImpl(new ConvertCmd());
+        imagePreProcessorFacade.preProcess(images.resolve("skansens_spelmanslag.jpg").toFile());
     }
 
 }
