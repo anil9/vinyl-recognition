@@ -11,6 +11,7 @@ import com.nilsson.vinylrecognition.preprocessing.ImagePreProcessorFacadeImpl;
 import org.im4java.core.ConvertCmd;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class SpringConfiguration {
@@ -32,7 +33,7 @@ public class SpringConfiguration {
 
     @Bean
     public LookupFacade lookupFacade() {
-        return new LookupFacadeImpl(ApiTokenFactory.getApiToken());
+        return new LookupFacadeImpl(ApiTokenFactory.getApiToken(), WebClient.create("https://api.discogs.com"));
     }
 
     @Bean

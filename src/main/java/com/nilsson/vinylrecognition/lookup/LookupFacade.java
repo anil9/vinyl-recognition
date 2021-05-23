@@ -1,5 +1,7 @@
 package com.nilsson.vinylrecognition.lookup;
 
+import java.util.Optional;
+
 public interface LookupFacade {
-    String lookupCatalogue(String catalogueNumber);
+    Optional<String> findTitleByCatalogueNumber(String catalogueNumber);
 }
