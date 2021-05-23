@@ -12,13 +12,16 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CatalogueNumberExtractor {
-    //    private static final Logger LOG = LogManager.getLogger(CatalogueNumberExtractor.class);
     private static final Logger LOG = LoggerFactory.getLogger(CatalogueNumberExtractor.class);
-    public static final String CATALOGUE_REGEX = "([A-Z0-9]+([ \\-][A-Z0-9]+)*){3,}";
-    public static final String CATALOGUE_WHOLE_LINE_REGEX = "^" + CATALOGUE_REGEX + "$";
-    private static Pattern patternForCatalogue = Pattern.compile(CATALOGUE_REGEX);
-    private static Pattern patternForWholeLineCatalogue = Pattern.compile(CATALOGUE_WHOLE_LINE_REGEX);
-    private static Set<String> BLOCKED_WORDS = Set.of("STEREO", "APM", "RPM");
+    private static final String CATALOGUE_REGEX = "([A-Z0-9]+([ \\-][A-Z0-9]+)*){3,}";
+    private static final String CATALOGUE_WHOLE_LINE_REGEX = "^" + CATALOGUE_REGEX + "$";
+    private static final String CONTAINS_DIGIT_REGEX = ".*\\d+.*";
+    private static final Set<String> BLOCKED_WORDS = Set.of("STEREO", "APM", "RPM");
+    private static final Pattern patternForCatalogue = Pattern.compile(CATALOGUE_REGEX);
+    private static final Pattern patternForWholeLineCatalogue = Pattern.compile(CATALOGUE_WHOLE_LINE_REGEX);
+
+    private CatalogueNumberExtractor() {
+    }
 
     public static String extractCatalogueNumber(String text) {
         LOG.debug(Arrays.stream(text.split(System.lineSeparator())).collect(Collectors.toList()).toString());
@@ -38,7 +41,7 @@ public class CatalogueNumberExtractor {
                     .filter(s -> s.length() >= 5 && s.length() <= 14)
                     .findFirst()
                     .orElse(collect.get(0));
-            LOG.info("picked=" + picked);
+            LOG.info("picked={}", picked);
             return picked;
         }
         return collect.get(0);
@@ -47,12 +50,12 @@ public class CatalogueNumberExtractor {
 
     private static List<String> findCatalogueNumberWordsWithinLine(String text) {
         return Arrays.stream(text.split(System.lineSeparator()))
-                .map(s -> patternForCatalogue.matcher(s))
+                .map(patternForCatalogue::matcher)
                 .filter(Matcher::find)
                 .map(matcher -> matcher.group(0))
 //                .filter(s -> s.matches(CATALOGUE_REGEX))
                 .peek(LOG::debug)
-                .filter(s -> s.matches(".*\\d+.*"))
+                .filter(s -> s.matches(CONTAINS_DIGIT_REGEX))
                 .filter(withoutBlockedWords())
                 .filter(s -> s.length() > 2)
                 .collect(Collectors.toList());
@@ -62,7 +65,7 @@ public class CatalogueNumberExtractor {
         return Arrays.stream(text.split(System.lineSeparator()))
                 .flatMap(s -> Arrays.stream(s.split("\\s")))
                 .filter(s -> s.matches(CATALOGUE_REGEX))
-                .filter(s -> s.matches(".*\\d+.*"))
+                .filter(s -> s.matches(CONTAINS_DIGIT_REGEX))
                 .filter(withoutBlockedWords())
                 .filter(s -> s.length() > 2)
                 .collect(Collectors.toList());
@@ -70,11 +73,11 @@ public class CatalogueNumberExtractor {
 
     private static List<String> findCatalogueNumberWholeLine(String text) {
         return Arrays.stream(text.split(System.lineSeparator()))
-                .map(s -> patternForWholeLineCatalogue.matcher(s))
+                .map(patternForWholeLineCatalogue::matcher)
                 .filter(Matcher::find)
                 .map(matcher -> matcher.group(0))
                 .filter(s -> s.matches(CATALOGUE_REGEX))
-                .filter(s -> s.matches(".*\\d+.*"))
+                .filter(s -> s.matches(CONTAINS_DIGIT_REGEX))
                 .filter(withoutBlockedWords())
                 .filter(s -> s.length() > 2)
                 .collect(Collectors.toList());

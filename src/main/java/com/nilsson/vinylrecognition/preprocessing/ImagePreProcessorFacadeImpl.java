@@ -24,12 +24,12 @@ public class ImagePreProcessorFacadeImpl implements ImagePreProcessorFacade {
 
     @Override
     public void preProcess(File... files) {
-        GMOperation gmOperation = new GMOperation();
+        var gmOperation = new GMOperation();
         gmOperation.addImage();
         gmOperation.type("Grayscale");
         gmOperation.depth(8);
 
-        IMOperation imOperation = new IMOperation();
+        var imOperation = new IMOperation();
         imOperation.format("TIFF");
 //        imOperation.crop(0, 0, 0, 900);
 //        imOperation.crop(0, 0, 0, -500);
@@ -41,7 +41,10 @@ public class ImagePreProcessorFacadeImpl implements ImagePreProcessorFacade {
             for (File file : files) {
                 convertCmd.run(imOperation, file.getPath(), file.getPath().replace(".jpg", ".tiff"));
             }
-        } catch (IOException | InterruptedException | IM4JavaException e) {
+        } catch (IOException | IM4JavaException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
         Arrays.stream(files).forEach(File::delete);

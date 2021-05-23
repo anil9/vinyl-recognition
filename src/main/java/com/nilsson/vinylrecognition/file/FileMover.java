@@ -22,10 +22,10 @@ public class FileMover {
         try {
             files = getFilesOrderedByModified(source);
 
-            for (int i = 0; i < files.size(); i++) {
+            for (var i = 0; i < files.size(); i++) {
                 if (i % everyNthFile == 0) {
-                    Path sourceFilePath = files.get(i);
-                    Path fileName = sourceFilePath.getFileName();
+                    var sourceFilePath = files.get(i);
+                    var fileName = sourceFilePath.getFileName();
                     Files.copy(sourceFilePath, target.resolve(fileName.toString()), REPLACE_EXISTING);
                 }
             }

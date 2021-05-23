@@ -3,8 +3,12 @@ package com.nilsson.vinylrecognition.ocr;
 import net.sourceforge.tess4j.Tesseract;
 
 public class TesseractFactory {
+
+    private TesseractFactory() {
+    }
+
     public static Tesseract createTesseractInstance() {
-        Tesseract tesseract = new Tesseract();
+        var tesseract = new Tesseract();
         tesseract.setDatapath("src/main/resources/tessdata");
         tesseract.setLanguage("swe");
         tesseract.setPageSegMode(3);
