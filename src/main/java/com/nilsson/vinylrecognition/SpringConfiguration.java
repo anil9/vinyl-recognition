@@ -1,5 +1,8 @@
 package com.nilsson.vinylrecognition;
 
+import com.nilsson.vinylrecognition.domain.ApiTokenFactory;
+import com.nilsson.vinylrecognition.lookup.LookupFacade;
+import com.nilsson.vinylrecognition.lookup.LookupFacadeImpl;
 import com.nilsson.vinylrecognition.ocr.OCRFacade;
 import com.nilsson.vinylrecognition.ocr.OCRFacadeImpl;
 import com.nilsson.vinylrecognition.ocr.TesseractFactory;
@@ -25,6 +28,11 @@ public class SpringConfiguration {
     @Bean
     public ImagePreProcessorFacade imagePreProcessor(ConvertCmd convertCmd) {
         return new ImagePreProcessorFacadeImpl(convertCmd);
+    }
+
+    @Bean
+    public LookupFacade lookupFacade() {
+        return new LookupFacadeImpl(ApiTokenFactory.getApiToken());
     }
 
     @Bean
