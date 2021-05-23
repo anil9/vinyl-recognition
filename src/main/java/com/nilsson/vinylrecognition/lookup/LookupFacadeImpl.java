@@ -41,7 +41,8 @@ public class LookupFacadeImpl implements LookupFacade {
         }
 
         if (titles.size() > 1) {
-            LOG.warn("Catalogue number: <{}> resulted in <{}> unique titles. Will return one of: {}", catalogueNumber, titles.size(), titles);
+            LOG.warn("Catalogue number: <{}> resulted in <{}> unique titles. Returning empty instead: {}", catalogueNumber, titles.size(), titles);
+            return Optional.empty();
         }
         return titles.stream().findFirst();
     }

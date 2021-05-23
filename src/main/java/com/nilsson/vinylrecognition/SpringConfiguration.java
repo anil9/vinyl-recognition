@@ -37,8 +37,8 @@ public class SpringConfiguration {
     }
 
     @Bean
-    public VinylRecognizer vinylRecognizer(ImagePreProcessorFacade imagePreProcessor, OCRFacade ocrFacade) {
-        return new VinylRecognizer(imagePreProcessor, ocrFacade);
+    public VinylRecognizer vinylRecognizer(ImagePreProcessorFacade imagePreProcessor, OCRFacade ocrFacade, LookupFacade lookupFacade) {
+        return new VinylRecognizer(imagePreProcessor, ocrFacade, lookupFacade);
     }
 
 }

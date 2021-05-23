@@ -1,10 +1,9 @@
 package com.nilsson.vinylrecognition;
 
 import com.nilsson.vinylrecognition.catno.CatalogueNumberExtractor;
-import com.nilsson.vinylrecognition.file.FileMover;
+import com.nilsson.vinylrecognition.lookup.LookupFacade;
 import com.nilsson.vinylrecognition.ocr.OCRFacade;
 import com.nilsson.vinylrecognition.preprocessing.ImagePreProcessorFacade;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -12,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.lang.invoke.MethodHandles.lookup;
@@ -24,20 +24,22 @@ public class VinylRecognizer {
     private static final Logger LOG = getLogger(lookup().lookupClass());
     private final ImagePreProcessorFacade imagePreProcessor;
     private final OCRFacade ocrFacade;
+    private final LookupFacade lookupFacade;
 
-    public VinylRecognizer(ImagePreProcessorFacade imagePreProcessor, OCRFacade ocrFacade) {
+    public VinylRecognizer(ImagePreProcessorFacade imagePreProcessor, OCRFacade ocrFacade, LookupFacade lookupFacade) {
         this.imagePreProcessor = imagePreProcessor;
         this.ocrFacade = ocrFacade;
+        this.lookupFacade = lookupFacade;
     }
 
     public void run() throws IOException {
-        FileUtils.cleanDirectory(TARGET_DIR.toFile());
-        FileMover.moveEveryNthFiles(SOURCE_DIR, TARGET_DIR, 5);
-
-        imagePreProcessor.preProcess(getSortedJpgFiles());
-
+//        FileUtils.cleanDirectory(TARGET_DIR.toFile());
+//        FileMover.moveEveryNthFiles(SOURCE_DIR, TARGET_DIR, 5);
+//
+//        imagePreProcessor.preProcess(getSortedJpgFiles());
+//
         File[] sortedTiffFiles = getSortedTiffFiles();
-        LOG.debug(Arrays.toString(sortedTiffFiles));
+//        LOG.debug(Arrays.toString(sortedTiffFiles));
         List<String> catalogueNumbers = Arrays.stream(sortedTiffFiles)
                 .map(ocrFacade::extractTextFromImage)
                 .map(CatalogueNumberExtractor::extractCatalogueNumber)
@@ -60,6 +62,15 @@ public class VinylRecognizer {
         long notMatched = correctCatalogueNumbers.size() - matchedCount;
         long falsePositivesCount = falsePositives.size();
         LOG.info("False positives (lower is better): {}/{} ({}%)", falsePositivesCount, notMatched, falsePositivesCount * 100 / ((double) notMatched));
+
+        LOG.info("Final results when gathering from Discogs:");
+        catalogueNumbers.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(Function.identity(), lookupFacade::findTitleByCatalogueNumber))
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().isPresent())
+                .forEach(entry -> LOG.info("title={} (from catalogue no={})", entry.getValue().get(), entry.getKey()));
 
     }
 
