@@ -8,10 +8,10 @@
 		<version>2.5.5</version>
 	</parent>
 	<groupId>com.nilsson</groupId>
-	<artifactId>vinyl-recognition</artifactId>
+	<artifactId>vinyl-record-sales</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>vinyl-recognition</name>
-	<description>Project for looking up vinyl records using OCR</description>
+	<name>vinyl-record-sales</name>
+	<description>Application for creating populated vinyl record entries in a marketplace application</description>
 	<properties>
 		<java.version>15</java.version>
 	</properties>

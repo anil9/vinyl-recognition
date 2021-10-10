@@ -1,11 +1,11 @@
-package com.nilsson.vinylrecognition;
+package com.nilsson.vinylrecordsales;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
-import com.nilsson.vinylrecognition.domain.ApiTokenFactory;
-import com.nilsson.vinylrecognition.lookup.LookupFacade;
-import com.nilsson.vinylrecognition.lookup.LookupFacadeImpl;
+import com.nilsson.vinylrecordsales.domain.ApiTokenFactory;
+import com.nilsson.vinylrecordsales.lookup.LookupFacade;
+import com.nilsson.vinylrecordsales.lookup.LookupFacadeImpl;
 
 @Configuration
 public class SpringConfiguration {

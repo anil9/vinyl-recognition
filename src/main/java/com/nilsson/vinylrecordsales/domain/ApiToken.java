@@ -1,4 +1,4 @@
-package com.nilsson.vinylrecognition.domain;
+package com.nilsson.vinylrecordsales.domain;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

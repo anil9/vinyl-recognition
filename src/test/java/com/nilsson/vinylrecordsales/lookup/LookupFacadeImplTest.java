@@ -1,6 +1,6 @@
-package com.nilsson.vinylrecognition.lookup;
+package com.nilsson.vinylrecordsales.lookup;
 
-import com.nilsson.vinylrecognition.domain.ApiToken;
+import com.nilsson.vinylrecordsales.domain.ApiToken;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;

@@ -1,9 +1,9 @@
-package com.nilsson.vinylrecognition.lookup;
+package com.nilsson.vinylrecordsales.lookup;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.nilsson.vinylrecognition.domain.ApiToken;
-import com.nilsson.vinylrecognition.domain.ApiTokenFactory;
+import com.nilsson.vinylrecordsales.domain.ApiToken;
+import com.nilsson.vinylrecordsales.domain.ApiTokenFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;

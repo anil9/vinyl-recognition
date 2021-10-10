@@ -1,4 +1,4 @@
-package com.nilsson.vinylrecognition.domain;
+package com.nilsson.vinylrecordsales.domain;
 
 public class ApiTokenFactory {
     private ApiTokenFactory() {

@@ -1,4 +1,4 @@
-package com.nilsson.vinylrecognition;
+package com.nilsson.vinylrecordsales;
 
 //@SpringBootTest
 //class VinylRecognitionApplicationTests {

@@ -1,4 +1,4 @@
-package com.nilsson.vinylrecognition.lookup;
+package com.nilsson.vinylrecordsales.lookup;
 
 import java.util.Optional;
 
