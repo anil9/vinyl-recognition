@@ -16,8 +16,8 @@ public class VinylRecognitionApplication {
 
 		SpringApplication.run(VinylRecognitionApplication.class, args);
 
-		var vinylRecognizer = context.getBean(VinylRecognizer.class);
-		vinylRecognizer.run();
+//		var vinylRecognizer = context.getBean(VinylRecognizer.class);
+//		vinylRecognizer.run();
 	}
 
 }
