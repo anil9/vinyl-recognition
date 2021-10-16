@@ -14,12 +14,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.lang.invoke.MethodHandles;
-import java.time.Year;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.HashSet;
+import java.util.Optional;
 
-import static com.nilsson.vinylrecordsales.lookup.ExternalIdentifier.*;
+import static com.nilsson.vinylrecordsales.lookup.ExternalIdentifier.RECORD_TITLE;
+import static com.nilsson.vinylrecordsales.lookup.ExternalIdentifier.RELEASE_ID;
+import static java.util.Objects.requireNonNull;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -27,10 +27,12 @@ public class LookupFacadeImpl implements LookupFacade {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ApiToken apiToken;
     private final WebClient client;
+    private final RecordInformationConverter recordInformationConverter;
 
-    public LookupFacadeImpl(ApiToken apiToken, WebClient client) {
-        this.apiToken = apiToken;
-        this.client = client;
+    public LookupFacadeImpl(ApiToken apiToken, WebClient client, RecordInformationConverter recordInformationConverter) {
+        this.apiToken = requireNonNull(apiToken, "apiToken");
+        this.client = requireNonNull(client, "client");
+        this.recordInformationConverter = requireNonNull(recordInformationConverter, "recordInformationConverter");
     }
 
     @Override
@@ -42,52 +44,12 @@ public class LookupFacadeImpl implements LookupFacade {
         var chosenRecord = catalogueNumberResponse.get(0).getAsJsonObject();
         var releaseId = extractReleaseId(chosenRecord);
         JsonObject releaseResponse = getResponseFromReleaseId(releaseId);
-        return Optional.of(RecordInformation.builder()
-                        .withTitle(extractTitle(chosenRecord))
-                        .withTracklist(extractTracklist(releaseResponse))
-                        .withYear(extractYear(releaseResponse))
-                        .withStyle(extractStyle(releaseResponse))
-                        .withGenre(extractGenre(releaseResponse))
-                .build());
+        return recordInformationConverter.getRecordInformation(chosenRecord, releaseResponse);
 
     }
 
     private String extractReleaseId(JsonObject chosenRecord) {
         return chosenRecord.get(RELEASE_ID.toString()).getAsString();
-    }
-
-    private String extractTitle(JsonObject releaseResponse) {
-        return releaseResponse.get(RECORD_TITLE.toString()).getAsString();
-    }
-
-    private List<String> extractGenre(JsonObject releaseResponse) {
-        var genres = releaseResponse.get(GENRES.toString()).getAsJsonArray();
-        return StreamSupport.stream(genres.spliterator(), true)
-                .map(JsonElement::getAsString)
-                .collect(Collectors.toList());
-    }
-
-    private List<String> extractStyle(JsonObject releaseResponse) {
-        var styles = releaseResponse.get(STYLES.toString()).getAsJsonArray();
-        return StreamSupport.stream(styles.spliterator(), true)
-                .map(JsonElement::getAsString)
-                .collect(Collectors.toList());
-    }
-
-    private Year extractYear(JsonObject releaseResponse) {
-        var element = releaseResponse.get(YEAR.toString());
-        return element == null? null : Year.of(element.getAsInt());
-    }
-
-    private Map<String, String> extractTracklist(JsonObject jsonObject) {
-        Map<String, String> tracklist = new LinkedHashMap<>();
-        var tracklistArray = jsonObject.get(TRACKLIST.toString()).getAsJsonArray();
-
-        for (JsonElement track : tracklistArray) {
-            var trackObj = track.getAsJsonObject();
-            tracklist.put(trackObj.get(TRACK_TITLE.toString()).getAsString(), trackObj.get(TRACK_DURATION.toString()).getAsString());
-        }
-        return tracklist;
     }
 
     private JsonObject getResponseFromReleaseId(String releaseId) {
@@ -144,7 +106,7 @@ public class LookupFacadeImpl implements LookupFacade {
     }
 
     public static void main(String[] args) {
-        LookupFacade lookupFacade = new LookupFacadeImpl(ApiTokenFactory.getApiToken(), WebClient.create("https://api.discogs.com"));
+        LookupFacade lookupFacade = new LookupFacadeImpl(ApiTokenFactory.getApiToken(), WebClient.create("https://api.discogs.com"), new RecordInformationConverter());
         var catalogueNumber = "MLPH 1622";
         var recordInformation = lookupFacade.getRecordInformationByCatalogueNumber(catalogueNumber).orElseThrow();
         LOG.info("Catalogue number {} returns record information {}", catalogueNumber,recordInformation);
