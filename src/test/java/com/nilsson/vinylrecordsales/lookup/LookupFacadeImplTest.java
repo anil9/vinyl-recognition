@@ -37,7 +37,7 @@ class LookupFacadeImplTest {
         mockBackEnd.start();
         String baseUrl = String.format("http://localhost:%s",
                 mockBackEnd.getPort());
-        when(apiToken.getValue()).thenReturn("secretToken");
+        when(apiToken.getToken()).thenReturn("secretToken");
         lookupFacadeImpl = new LookupFacadeImpl(apiToken, WebClient.create(baseUrl), recordInformationConverter);
     }
 

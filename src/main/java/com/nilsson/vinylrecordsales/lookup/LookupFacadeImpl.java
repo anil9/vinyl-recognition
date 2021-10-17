@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.nilsson.vinylrecordsales.domain.ApiToken;
-import com.nilsson.vinylrecordsales.domain.ApiTokenFactory;
 import com.nilsson.vinylrecordsales.domain.RecordInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,7 +88,7 @@ public class LookupFacadeImpl implements LookupFacade {
         WebClient.RequestHeadersSpec<?> headersSpec = uriSpec.uri("/database/search?catno=" + catalogueNumber);
         return headersSpec.header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Discogs token=" + apiToken.getValue())
+                .header("Authorization", "Discogs token=" + apiToken.getToken())
                 .retrieve()
                 .bodyToMono(String.class);
     }
@@ -100,15 +99,8 @@ public class LookupFacadeImpl implements LookupFacade {
         WebClient.RequestHeadersSpec<?> headersSpec = uriSpec.uri("/releases/" + releaseId);
         return headersSpec.header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Discogs token=" + apiToken.getValue())
+                .header("Authorization", "Discogs token=" + apiToken.getToken())
                 .retrieve()
                 .bodyToMono(String.class);
-    }
-
-    public static void main(String[] args) {
-        LookupFacade lookupFacade = new LookupFacadeImpl(ApiTokenFactory.getApiToken(), WebClient.create("https://api.discogs.com"), new RecordInformationConverter());
-        var catalogueNumber = "MLPH 1622";
-        var recordInformation = lookupFacade.getRecordInformationByCatalogueNumber(catalogueNumber).orElseThrow();
-        LOG.info("Catalogue number {} returns record information {}", catalogueNumber,recordInformation);
     }
 }

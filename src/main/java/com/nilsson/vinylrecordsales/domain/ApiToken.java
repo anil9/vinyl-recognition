@@ -1,30 +1,53 @@
 package com.nilsson.vinylrecordsales.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 public class ApiToken {
-    private final String value;
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final String token;
+    private final TokenProducer tokenProducer;
 
-    public ApiToken(String value) {
-        this.value = value;
+
+    public ApiToken(Environment env, TokenProducer tokenProducer) {
+        this.tokenProducer = tokenProducer;
+        String tokenFromFile = fromFile(env.getProperty(tokenProducer.getProperty())).trim();
+        LOG.debug("Read {} token from file", tokenProducer);
+        validate(tokenFromFile);
+        LOG.debug("Validated {} token", tokenProducer);
+        this.token = tokenFromFile;
+        LOG.info("Loaded token for {} API", tokenProducer);
     }
 
-    public static ApiToken fromFile(String s) {
-        try (Stream<String> lines = Files.lines(Path.of(s))) {
-            String token = lines.findFirst().orElseThrow(() -> new IllegalStateException("File must contain an API-token"));
-            return new ApiToken(token);
+    private void validate(String tokenFromFile) {
+        if (tokenFromFile.isBlank()) {
+            throw new IllegalArgumentException("Token cannot be empty");
+        }
+    }
+
+    private String fromFile(String path) {
+        try (Stream<String> lines = Files.lines(Path.of(path))) {
+            return lines.findFirst().orElseThrow(() -> new IllegalStateException("File must contain an API-token"));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
-    public String getValue() {
-        return value;
+    public String getToken() {
+        return token;
+    }
+
+    public TokenProducer getTokenProcucer() {
+        return tokenProducer;
     }
 
     @Override
@@ -32,11 +55,19 @@ public class ApiToken {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ApiToken apiToken = (ApiToken) o;
-        return Objects.equals(value, apiToken.value);
+        return Objects.equals(token, apiToken.token) && tokenProducer == apiToken.tokenProducer;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(token, tokenProducer);
+    }
+
+    @Override
+    public String toString() {
+        return "ApiToken{" +
+                "token='" + token + '\'' +
+                ", tokenProcucer=" + tokenProducer +
+                '}';
     }
 }
