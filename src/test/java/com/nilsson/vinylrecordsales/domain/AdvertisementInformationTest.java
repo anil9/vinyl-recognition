@@ -1,14 +1,13 @@
 package com.nilsson.vinylrecordsales.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.Year;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AdvertisementInformationTest {
 
@@ -36,6 +35,7 @@ class AdvertisementInformationTest {
 						new ShippingInformation(ShippingCompany.SCHENKER, new BigDecimal("70"), Boolean.TRUE))
 				.withQuantityInStock(new Quantity(1))
 				.withTax(25)
+				.withProductCategory(ProductCategory.OTHER)
 				.build();
 		//then
 		assertThat(ad.getTitle()).isEqualTo(recordInformation.getTitle());

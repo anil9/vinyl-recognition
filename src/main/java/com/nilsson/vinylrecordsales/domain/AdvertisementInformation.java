@@ -1,15 +1,16 @@
 package com.nilsson.vinylrecordsales.domain;
 
-import static java.util.Objects.requireNonNull;
+import com.nilsson.vinylrecordsales.advertisement.AdvertisementDescription;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import com.nilsson.vinylrecordsales.advertisement.AdvertisementDescription;
+import static java.util.Objects.requireNonNull;
 
 public class AdvertisementInformation {
 	private final String folderId;
 	private final String title;
+	private final ProductCategory productCategory;
 	private final String description;
 	private final Condition condition;
 	private final Integer tax;
@@ -19,15 +20,16 @@ public class AdvertisementInformation {
 	private final BigDecimal auctionPrice;
 
 	public AdvertisementInformation(AdvertisementInformationBuilder advertisementInformation) {
+		this.folderId = requireNonNull(advertisementInformation.folderId, "folderId");
+		this.title = requireNonNull(advertisementInformation.title, "title");
+		this.productCategory = requireNonNull(advertisementInformation.productCategory, "productCategory");
 		this.auctionPrice = requireNonNull(advertisementInformation.auctionPrice, "auctionPrice");
 		this.quantityInStock = requireNonNull(advertisementInformation.quantityInStock, "quantityInStock");
 		this.shippingInformation = requireNonNull(advertisementInformation.shippingInformation, "shippingInformation");
 		this.condition = requireNonNull(advertisementInformation.condition, "condition");
-		this.folderId = requireNonNull(advertisementInformation.folderId, "folderId");
 		this.description = requireNonNull(advertisementInformation.description, "description");
 		this.tax = requireNonNull(advertisementInformation.tax, "tax");
 		this.purchasePrice = requireNonNull(advertisementInformation.purchasePrice, "purchasePrice");
-		this.title = requireNonNull(advertisementInformation.title, "title");
 	}
 
 	public static AdvertisementInformationBuilder builder() {
@@ -70,9 +72,14 @@ public class AdvertisementInformation {
 		return auctionPrice;
 	}
 
+	public ProductCategory getProductCategory() {
+		return productCategory;
+	}
+
 	public static final class AdvertisementInformationBuilder {
 		private String folderId;
 		private String title;
+		private ProductCategory productCategory;
 		private String description;
 		private Condition condition;
 		private Integer tax;
@@ -85,7 +92,6 @@ public class AdvertisementInformation {
 		}
 
 
-
 		public AdvertisementInformationBuilder withFolderId(String folderId) {
 			this.folderId = folderId;
 			return this;
@@ -93,6 +99,11 @@ public class AdvertisementInformation {
 
 		public AdvertisementInformationBuilder withTitle(String title) {
 			this.title = title;
+			return this;
+		}
+
+		public AdvertisementInformationBuilder withProductCategory(ProductCategory productCategory) {
+			this.productCategory = productCategory;
 			return this;
 		}
 
@@ -132,8 +143,8 @@ public class AdvertisementInformation {
 		}
 
 		public AdvertisementInformationBuilder withRecordInformation(RecordInformation recordInformation) {
-			this.title=recordInformation.getTitle();
-			this.description= AdvertisementDescription.getDescription(recordInformation);
+			this.title = recordInformation.getTitle();
+			this.description = AdvertisementDescription.getDescription(recordInformation);
 			return this;
 		}
 
@@ -142,31 +153,25 @@ public class AdvertisementInformation {
 		}
 	}
 
-	@Override public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		AdvertisementInformation that = (AdvertisementInformation) o;
-		return Objects.equals(getFolderId(), that.getFolderId()) && Objects.equals(getTitle(),
-				that.getTitle()) && Objects.equals(getDescription(), that.getDescription())
-				&& getCondition() == that.getCondition() && Objects.equals(getTax(), that.getTax())
-				&& Objects.equals(getQuantityInStock(), that.getQuantityInStock()) && Objects.equals(
-				getPurchasePrice(), that.getPurchasePrice()) && Objects.equals(getShippingInformation(),
-				that.getShippingInformation()) && Objects.equals(getAuctionPrice(), that.getAuctionPrice());
+		return Objects.equals(folderId, that.folderId) && Objects.equals(title, that.title) && productCategory == that.productCategory && Objects.equals(description, that.description) && condition == that.condition && Objects.equals(tax, that.tax) && Objects.equals(quantityInStock, that.quantityInStock) && Objects.equals(purchasePrice, that.purchasePrice) && Objects.equals(shippingInformation, that.shippingInformation) && Objects.equals(auctionPrice, that.auctionPrice);
 	}
 
-	@Override public int hashCode() {
-		return Objects.hash(getFolderId(), getTitle(), getDescription(), getCondition(), getTax(), getQuantityInStock(),
-				getPurchasePrice(), getShippingInformation(), getAuctionPrice());
+	@Override
+	public int hashCode() {
+		return Objects.hash(folderId, title, productCategory, description, condition, tax, quantityInStock, purchasePrice, shippingInformation, auctionPrice);
 	}
 
-	@Override public String toString() {
+	@Override
+	public String toString() {
 		return "AdvertisementInformation{" +
 				"folderId='" + folderId + '\'' +
 				", title='" + title + '\'' +
+				", productCategory=" + productCategory +
 				", description='" + description + '\'' +
 				", condition=" + condition +
 				", tax=" + tax +
