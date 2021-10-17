@@ -379,4 +379,13 @@ public class ExampleJsonResponses {
                  }
                 """;
     }
+
+    public static String productCreatedResponse() {
+        return """
+                {
+                  "id": 14475806,
+                  "private_reference": "REF-3"
+                }
+                """;
+    }
 }
