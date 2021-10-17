@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class LookupFacadeImplTest {
     private static final String CATALOGUE_NUMBER = "MLPH 1622";
-    private static MockWebServer mockBackEnd;
+    private static MockWebServer mockBackend;
     private LookupFacadeImpl lookupFacadeImpl;
 
     @Mock
@@ -32,11 +32,11 @@ class LookupFacadeImplTest {
     RecordInformationConverter recordInformationConverter;
 
     @BeforeEach
-    void initialize() throws IOException {
-        mockBackEnd = new MockWebServer();
-        mockBackEnd.start();
+    void setUp() throws IOException {
+        mockBackend = new MockWebServer();
+        mockBackend.start();
         String baseUrl = String.format("http://localhost:%s",
-                mockBackEnd.getPort());
+                mockBackend.getPort());
         when(apiToken.getToken()).thenReturn("secretToken");
         lookupFacadeImpl = new LookupFacadeImpl(apiToken, WebClient.create(baseUrl), recordInformationConverter);
     }
@@ -45,7 +45,7 @@ class LookupFacadeImplTest {
     @Test
     void canRequestDataByCatalogueNumberFromApi() throws InterruptedException {
         //given
-        mockBackEnd.enqueue(new MockResponse()
+        mockBackend.enqueue(new MockResponse()
                 .setBody(ExampleJsonResponses.exampleSuccessJsonResponse())
                 .addHeader("Content-Type", "application/json"));
         //when
@@ -55,7 +55,7 @@ class LookupFacadeImplTest {
                 .expectNextMatches(s -> s.equals(ExampleJsonResponses.exampleSuccessJsonResponse()))
                 .verifyComplete();
 
-        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        RecordedRequest recordedRequest = mockBackend.takeRequest();
         assertThat(recordedRequest.getMethod()).isEqualTo("GET");
         assertThat(recordedRequest.getPath()).isEqualTo("/database/search?catno=test");
         assertThat(recordedRequest.getHeader("Authorization")).isEqualTo("Discogs token=secretToken");
@@ -65,7 +65,7 @@ class LookupFacadeImplTest {
     @Test
     void canRequestDataByReleaseIdFromApi() throws InterruptedException {
         //given
-        mockBackEnd.enqueue(new MockResponse()
+        mockBackend.enqueue(new MockResponse()
                 .setBody(ExampleJsonResponses.releaseInfo())
                 .addHeader("Content-Type", "application/json"));
         //when
@@ -75,7 +75,7 @@ class LookupFacadeImplTest {
                 .expectNextMatches(s -> s.equals(ExampleJsonResponses.releaseInfo()))
                 .verifyComplete();
 
-        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        RecordedRequest recordedRequest = mockBackend.takeRequest();
         assertThat(recordedRequest.getMethod()).isEqualTo("GET");
         assertThat(recordedRequest.getPath()).isEqualTo("/releases/releaseId");
         assertThat(recordedRequest.getHeader("Authorization")).isEqualTo("Discogs token=secretToken");
@@ -85,10 +85,10 @@ class LookupFacadeImplTest {
     @Test
     void returnsRecordInformation() {
         //given
-        mockBackEnd.enqueue(new MockResponse()
+        mockBackend.enqueue(new MockResponse()
                 .setBody(ExampleJsonResponses.exampleSuccessJsonResponse())
                 .addHeader("Content-Type", "application/json"));
-        mockBackEnd.enqueue(new MockResponse()
+        mockBackend.enqueue(new MockResponse()
                 .setBody(ExampleJsonResponses.releaseInfo())
                 .addHeader("Content-Type", "application/json"));
         JsonObject chosenRecord = new Gson().fromJson(ExampleJsonResponses.record(), JsonObject.class);

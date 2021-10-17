@@ -46,7 +46,7 @@ public class ApiToken {
         return token;
     }
 
-    public TokenProducer getTokenProcucer() {
+    public TokenProducer getTokenProducer() {
         return tokenProducer;
     }
 
@@ -67,7 +67,7 @@ public class ApiToken {
     public String toString() {
         return "ApiToken{" +
                 "token='" + token + '\'' +
-                ", tokenProcucer=" + tokenProducer +
+                ", tokenProducer=" + tokenProducer +
                 '}';
     }
 }

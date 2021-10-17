@@ -3,10 +3,9 @@ package com.nilsson.vinylrecordsales.domain;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.Year;
 import java.util.LinkedHashMap;
-import java.util.List;
 
+import static com.nilsson.vinylrecordsales.domain.PickupStrategy.ALLOW_PICKUP;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AdvertisementInformationTest {
@@ -17,11 +16,7 @@ class AdvertisementInformationTest {
 		final LinkedHashMap<String, String> tracklist = new LinkedHashMap<>();
 		tracklist.put("track1", "duration1");
 		tracklist.put("track2", "duration2");
-		final RecordInformation recordInformation = RecordInformation.builder()
-				.withTitle("Title")
-				.withYear(Year.of(1990))
-				.withGenre(List.of("genre1", "genre2"))
-				.withStyle(List.of("style1", "style2"))
+		final RecordInformation recordInformation = RecordInformationTestBuilder.populatedRecordInformationBuilder()
 				.withTracklist(tracklist)
 				.build();
 		//when
@@ -32,9 +27,9 @@ class AdvertisementInformationTest {
 				.withFolderId("folderId")
 				.withPurchasePrice(BigDecimal.ONE)
 				.withShippingInformation(
-						new ShippingInformation(ShippingCompany.SCHENKER, new BigDecimal("70"), Boolean.TRUE))
+						new ShippingInformation(ShippingCompany.SCHENKER, new BigDecimal("70"), ALLOW_PICKUP))
 				.withQuantityInStock(new Quantity(1))
-				.withTax(25)
+				.withTax(new Tax(25))
 				.withProductCategory(ProductCategory.OTHER)
 				.build();
 		//then
@@ -56,4 +51,6 @@ class AdvertisementInformationTest {
 				track1 duration1
 				track2 duration2""");
 	}
+
+
 }

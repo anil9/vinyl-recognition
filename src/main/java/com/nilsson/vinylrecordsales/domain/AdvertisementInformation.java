@@ -13,7 +13,7 @@ public class AdvertisementInformation {
 	private final ProductCategory productCategory;
 	private final String description;
 	private final Condition condition;
-	private final Integer tax;
+	private final Tax tax;
 	private final Quantity quantityInStock;
 	private final BigDecimal purchasePrice;
 	private final ShippingInformation shippingInformation;
@@ -52,7 +52,7 @@ public class AdvertisementInformation {
 		return condition;
 	}
 
-	public Integer getTax() {
+	public Tax getTax() {
 		return tax;
 	}
 
@@ -82,7 +82,7 @@ public class AdvertisementInformation {
 		private ProductCategory productCategory;
 		private String description;
 		private Condition condition;
-		private Integer tax;
+		private Tax tax;
 		private Quantity quantityInStock;
 		private BigDecimal purchasePrice;
 		private ShippingInformation shippingInformation;
@@ -97,18 +97,8 @@ public class AdvertisementInformation {
 			return this;
 		}
 
-		public AdvertisementInformationBuilder withTitle(String title) {
-			this.title = title;
-			return this;
-		}
-
 		public AdvertisementInformationBuilder withProductCategory(ProductCategory productCategory) {
 			this.productCategory = productCategory;
-			return this;
-		}
-
-		public AdvertisementInformationBuilder withDescription(String description) {
-			this.description = description;
 			return this;
 		}
 
@@ -117,7 +107,7 @@ public class AdvertisementInformation {
 			return this;
 		}
 
-		public AdvertisementInformationBuilder withTax(Integer tax) {
+		public AdvertisementInformationBuilder withTax(Tax tax) {
 			this.tax = tax;
 			return this;
 		}
