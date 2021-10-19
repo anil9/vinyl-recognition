@@ -3,7 +3,9 @@ package com.nilsson.vinylrecordsales.domain;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import static com.nilsson.vinylrecordsales.domain.PickupStrategy.ALLOW_PICKUP;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,16 +26,19 @@ class AdvertisementInformationTest {
 				.withRecordInformation(recordInformation)
 				.withAuctionPrice(BigDecimal.TEN)
 				.withCondition(Condition.USED)
-				.withFolderId("folderId")
+				.withFolderId(1338)
 				.withPurchasePrice(BigDecimal.ONE)
 				.withShippingInformation(
 						new ShippingInformation(ShippingCompany.SCHENKER, new BigDecimal("70"), ALLOW_PICKUP))
 				.withQuantityInStock(new Quantity(1))
 				.withTax(new Tax(25))
 				.withProductCategory(ProductCategory.OTHER)
+				.withCurrency(Currency.getInstance(Locale.CANADA))
+				.withTargetMarketplace(TargetMarketplace.TRADERA)
 				.build();
 		//then
 		assertThat(ad.getTitle()).isEqualTo(recordInformation.getTitle());
+		assertThat(ad.getCurrency().getCurrencyCode()).isEqualTo("CAD");
 		assertThat(ad.getDescription()).isEqualTo("""
 				Skick se bilder. Ej provspelad. Kolla gärna in mina andra annonser och passa på att buda in fler LP-skivor, jag samfraktar gärna!
 				Fraktpriser (ca):

@@ -7,6 +7,7 @@ import com.nilsson.vinylrecordsales.lookup.ExampleJsonResponses;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -35,7 +36,8 @@ class AdvertisementFacadeImplTest {
     }
 
     @Test
-    void shouldCreateProduct() throws InterruptedException {
+    @Disabled("Not yet implemented")
+    void shouldCreateProduct() {
         //given
         mockBackend.enqueue(new MockResponse()
                 .setBody(ExampleJsonResponses.productCreatedResponse())
