@@ -15,17 +15,17 @@ import java.util.stream.Stream;
 public class ApiToken {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final String token;
-    private final TokenProducer tokenProducer;
+    private final ApiTokenProducer apiTokenProducer;
 
 
-    public ApiToken(Environment env, TokenProducer tokenProducer) {
-        this.tokenProducer = tokenProducer;
-        String tokenFromFile = fromFile(env.getProperty(tokenProducer.getProperty())).trim();
-        LOG.debug("Read {} token from file", tokenProducer);
+    public ApiToken(Environment env, ApiTokenProducer apiTokenProducer) {
+        this.apiTokenProducer = apiTokenProducer;
+        String tokenFromFile = fromFile(env.getProperty(apiTokenProducer.getProperty())).trim();
+        LOG.debug("Read {} token from file", apiTokenProducer);
         validate(tokenFromFile);
-        LOG.debug("Validated {} token", tokenProducer);
+        LOG.debug("Validated {} token", apiTokenProducer);
         this.token = tokenFromFile;
-        LOG.info("Loaded token for {} API", tokenProducer);
+        LOG.info("Loaded token for {} API", apiTokenProducer);
     }
 
     private void validate(String tokenFromFile) {
@@ -46,8 +46,8 @@ public class ApiToken {
         return token;
     }
 
-    public TokenProducer getTokenProducer() {
-        return tokenProducer;
+    public ApiTokenProducer getTokenProducer() {
+        return apiTokenProducer;
     }
 
     @Override
@@ -55,19 +55,19 @@ public class ApiToken {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ApiToken apiToken = (ApiToken) o;
-        return Objects.equals(token, apiToken.token) && tokenProducer == apiToken.tokenProducer;
+        return Objects.equals(token, apiToken.token) && apiTokenProducer == apiToken.apiTokenProducer;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(token, tokenProducer);
+        return Objects.hash(token, apiTokenProducer);
     }
 
     @Override
     public String toString() {
         return "ApiToken{" +
                 "token='" + token + '\'' +
-                ", tokenProducer=" + tokenProducer +
+                ", tokenProducer=" + apiTokenProducer +
                 '}';
     }
 }

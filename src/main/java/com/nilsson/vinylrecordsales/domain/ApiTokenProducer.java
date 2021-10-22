@@ -1,12 +1,12 @@
 package com.nilsson.vinylrecordsales.domain;
 
-public enum TokenProducer {
-    DISCOGS("discogs.token.path"),
-    SELLO("sello.token.path");
+public enum ApiTokenProducer {
+    DISCOGS("api.token.path.discogs"),
+    SELLO("api.token.path.sello");
 
     private final String property;
 
-    TokenProducer(String property) {
+    ApiTokenProducer(String property) {
 
         this.property = property;
     }

@@ -12,10 +12,10 @@ public class ApiTokenFactory {
     }
 
     public ApiToken discogsApiToken() {
-        return new ApiToken(environment, TokenProducer.DISCOGS);
+        return new ApiToken(environment, ApiTokenProducer.DISCOGS);
     }
 
     public ApiToken selloApiToken() {
-        return new ApiToken(environment, TokenProducer.SELLO);
+        return new ApiToken(environment, ApiTokenProducer.SELLO);
     }
 }
