@@ -22,7 +22,7 @@ public class AdvertisementInformation {
     private final Currency currency;
     private final TargetMarketplace targetMarketplace;
 
-    public AdvertisementInformation(AdvertisementInformationBuilder advertisementInformation) {
+    private AdvertisementInformation(AdvertisementInformationBuilder advertisementInformation) {
         this.folderId = requireNonNull(advertisementInformation.folderId, "folderId");
         this.title = requireNonNull(advertisementInformation.title, "title");
         this.productCategory = requireNonNull(advertisementInformation.productCategory, "productCategory");

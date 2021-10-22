@@ -1,5 +1,8 @@
 package com.nilsson.vinylrecordsales;
 
+import com.nilsson.vinylrecordsales.advertisement.AdvertisementFacade;
+import com.nilsson.vinylrecordsales.advertisement.AdvertisementFacadeImpl;
+import com.nilsson.vinylrecordsales.domain.AdvertisementInformationConverter;
 import com.nilsson.vinylrecordsales.domain.ApiTokenFactory;
 import com.nilsson.vinylrecordsales.lookup.LookupFacade;
 import com.nilsson.vinylrecordsales.lookup.LookupFacadeImpl;
@@ -14,6 +17,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 @PropertySource("classpath:/application.properties")
 public class SpringConfiguration {
 
+
+    @Bean
+    public AdvertisementFacade advertisementFacade(ApiTokenFactory apiTokenFactory) {
+        return new AdvertisementFacadeImpl(apiTokenFactory.selloApiToken(), WebClient.create("https://api.sello.io/v5/"), new AdvertisementInformationConverter());
+    }
 
     @Bean
     public LookupFacade lookupFacade(ApiTokenFactory apiTokenFactory) {

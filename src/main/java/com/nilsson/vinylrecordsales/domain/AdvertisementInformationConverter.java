@@ -1,14 +1,11 @@
 package com.nilsson.vinylrecordsales.domain;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AdvertisementInformationConverter {
 
-    private AdvertisementInformationConverter() {
-    }
 
-    public static JSONObject asJson(AdvertisementInformation ad) throws JSONException {
+    public JSONObject asJson(AdvertisementInformation ad) {
         JSONObject parentJson = new JSONObject();
         parentJson.put("folder_id", ad.getFolderId());
         parentJson.put("condition", ad.getCondition().getValue());
@@ -24,7 +21,7 @@ public class AdvertisementInformationConverter {
 
     }
 
-    private static JSONObject populateShippingField(AdvertisementInformation ad) throws JSONException {
+    private JSONObject populateShippingField(AdvertisementInformation ad) {
         ShippingInformation shippingInfo = ad.getShippingInformation();
 
         JSONObject marketplaceShipping = new JSONObject();
@@ -36,7 +33,7 @@ public class AdvertisementInformationConverter {
         return targetMarketplaceId;
     }
 
-    private static JSONObject populatePricesField(AdvertisementInformation ad) throws JSONException {
+    private JSONObject populatePricesField(AdvertisementInformation ad) {
         JSONObject auctionInformation = new JSONObject();
         auctionInformation.put("start", ad.getAuctionPrice().intValue());
         JSONObject marketplacePricing = new JSONObject();
@@ -47,7 +44,7 @@ public class AdvertisementInformationConverter {
         return targetMarketplaceId;
     }
 
-    private static JSONObject populateCategoriesField(AdvertisementInformation ad) throws JSONException {
+    private JSONObject populateCategoriesField(AdvertisementInformation ad) {
         JSONObject defaultCategory = new JSONObject();
         defaultCategory.put("id", ad.getProductCategory().getId());
         JSONObject categories = new JSONObject();
@@ -55,7 +52,7 @@ public class AdvertisementInformationConverter {
         return categories;
     }
 
-    private static JSONObject populateTextField(AdvertisementInformation ad) throws JSONException {
+    private JSONObject populateTextField(AdvertisementInformation ad) {
         JSONObject texts = new JSONObject();
         JSONObject defaultText = new JSONObject();
         JSONObject swedishText = new JSONObject();
