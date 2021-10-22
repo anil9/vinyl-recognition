@@ -68,7 +68,7 @@ class AdvertisementFacadeImplTest {
         ProductId productId = advertisementFacade.createProduct(advertisementInformation);
 
         //then
-        ProductId expectedProductId = new ProductId("14475806");
+        ProductId expectedProductId = new ProductId(14475806);
         assertThat(productId).isEqualTo(expectedProductId);
         RecordedRequest recordedRequest = mockBackend.takeRequest();
         assertThat(recordedRequest.getMethod()).isEqualTo("POST");

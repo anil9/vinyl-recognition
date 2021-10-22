@@ -39,7 +39,7 @@ public class AdvertisementFacadeImpl implements AdvertisementFacade {
                     .retrieve()
                     .bodyToMono(String.class)
                     .map(JSONObject::new)
-                    .map(jsonObject -> jsonObject.getString("id"))
+                    .map(jsonObject -> jsonObject.getInt("id"))
                     .map(ProductId::new)
                     .block();
         } catch (Exception e) {

@@ -5,13 +5,13 @@ import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 
 public class ProductId {
-	private final String id;
+	private final Integer id;
 
-	public ProductId(String id) {
+	public ProductId(Integer id) {
 		this.id = requireNonNull(id, "id");
 	}
 
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -20,7 +20,7 @@ public class ProductId {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		ProductId productId = (ProductId) o;
-		return Objects.equals(id, productId.id);
+		return id.equals(productId.id);
 	}
 
 	@Override
@@ -30,8 +30,6 @@ public class ProductId {
 
 	@Override
 	public String toString() {
-		return "ProductId{" +
-				"id='" + id + '\'' +
-				'}';
+		return String.valueOf(id);
 	}
 }
