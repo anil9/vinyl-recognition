@@ -380,6 +380,145 @@ public class ExampleJsonResponses {
                 """;
     }
 
+    public static String ambiguousLookupResponse() {
+        return """
+                {
+                  "pagination": {
+                   "page": 1,
+                   "pages": 1,
+                   "per_page": 50,
+                   "items": 2,
+                   "urls": {}
+                  },
+                  "results": [
+                 
+                   {
+                    "country": "Sweden",
+                    "year": "1986",
+                    "format": ["Vinyl", "LP", "Album"],
+                    "label": ["Mariann", "Mariann Records", "Mariann Records", "Fri Reklam", "KMH Studios", "SIB-Tryck AB, Norsborg", "Grammoplast"],
+                    "type": "release",
+                    "genre": ["Electronic", "Pop"],
+                    "style": ["Synth-pop", "Schlager"],
+                    "id": 2229646,
+                    "barcode": ["BIEM/n\\u00a9b", "MLPH-1622-A 860414GP BA-GP", "MLPH-1622-B 860414GP BA-GP"],
+                    "user_data": {
+                     "in_wantlist": false,
+                     "in_collection": false
+                    },
+                    "master_id": 315620,
+                    "master_url": "https://api.discogs.com/masters/315620",
+                    "uri": "/Lena-Philipsson-K%C3%A4rleken-%C3%84r-Evig/release/2229646",
+                    "catno": "MLPH 1622",
+                    "title": "Lena Philipsson - K\\u00e4rleken \\u00c4r Evig.",
+                    "thumb": "https://img.discogs.com/K-iaOq7zlRC0q5RfRdA9U8VisCE=/fit-in/150x150/filters:strip_icc():format(jpeg):mode_rgb():quality(40)/discogs-images/R-2229646-1320883037.jpeg.jpg",
+                    "cover_image": "https://img.discogs.com/58RI-XKBhD42w1SKIJhXvUIMFqA=/fit-in/450x450/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-2229646-1320883037.jpeg.jpg",
+                    "resource_url": "https://api.discogs.com/releases/2229646",
+                    "community": {
+                     "want": 20,
+                     "have": 198
+                    },
+                    "format_quantity": 1,
+                    "formats": [{
+                     "name": "Vinyl",
+                     "qty": "1",
+                     "descriptions": ["LP", "Album"]
+                    }]
+                   },
+                 
+                   {
+                    "country": "Sweden",
+                    "year": "1986",
+                    "format": ["Vinyl", "LP", "Album"],
+                    "label": ["Mariann", "Mariann Records", "Mariann Records", "Fri Reklam", "KMH Studios", "SIB-Tryck AB, Norsborg", "Grammoplast"],
+                    "type": "master",
+                    "genre": ["Electronic", "Pop"],
+                    "style": ["Synth-pop", "Schlager"],
+                    "id": 315620,
+                    "barcode": ["BIEM/n\\u00a9b", "MLPH-1622-A 860414GP BA-GP", "MLPH-1622-B 860414GP BA-GP"],
+                    "user_data": {
+                     "in_wantlist": false,
+                     "in_collection": false
+                    },
+                    "master_id": 315620,
+                    "master_url": "https://api.discogs.com/masters/315620",
+                    "uri": "/Lena-Philipsson-K%C3%A4rleken-%C3%84r-Evig/master/315620",
+                    "catno": "MLPH 1622",
+                    "title": "Lena Philipsson - K\\u00e4rleken \\u00c4r Evig.",
+                    "thumb": "https://img.discogs.com/K-iaOq7zlRC0q5RfRdA9U8VisCE=/fit-in/150x150/filters:strip_icc():format(jpeg):mode_rgb():quality(40)/discogs-images/R-2229646-1320883037.jpeg.jpg",
+                    "cover_image": "https://img.discogs.com/58RI-XKBhD42w1SKIJhXvUIMFqA=/fit-in/450x450/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-2229646-1320883037.jpeg.jpg",
+                    "resource_url": "https://api.discogs.com/masters/315620",
+                    "community": {
+                     "want": 24,
+                     "have": 207
+                    }
+                   },
+                   {
+                    "country": "Sweden",
+                    "year": "1986",
+                    "format": ["Vinyl", "LP", "Album"],
+                    "label": ["Mariann", "Mariann Records", "Mariann Records", "Fri Reklam", "KMH Studios", "SIB-Tryck AB, Norsborg", "Grammoplast"],
+                    "type": "release",
+                    "genre": ["Electronic", "Pop"],
+                    "style": ["Synth-pop", "Schlager"],
+                    "id": 2229646,
+                    "barcode": ["BIEM/n\\u00a9b", "MLPH-1622-A 860414GP BA-GP", "MLPH-1622-B 860414GP BA-GP"],
+                    "user_data": {
+                     "in_wantlist": false,
+                     "in_collection": false
+                    },
+                    "master_id": 315620,
+                    "master_url": "https://api.discogs.com/masters/315620",
+                    "uri": "/Lena-Philipsson-K%C3%A4rleken-%C3%84r-Evig/release/2229646",
+                    "catno": "MLPH 1622",
+                    "title": "Lena Philipsson - K\\u00e4rleken \\u00c4r Evig.",
+                    "thumb": "https://img.discogs.com/K-iaOq7zlRC0q5RfRdA9U8VisCE=/fit-in/150x150/filters:strip_icc():format(jpeg):mode_rgb():quality(40)/discogs-images/R-2229646-1320883037.jpeg.jpg",
+                    "cover_image": "https://img.discogs.com/58RI-XKBhD42w1SKIJhXvUIMFqA=/fit-in/450x450/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-2229646-1320883037.jpeg.jpg",
+                    "resource_url": "https://api.discogs.com/releases/2229646",
+                    "community": {
+                     "want": 20,
+                     "have": 198
+                    },
+                    "format_quantity": 1,
+                    "formats": [{
+                     "name": "Vinyl",
+                     "qty": "1",
+                     "descriptions": ["LP", "Album"]
+                    }]
+                   },
+                 
+                   {
+                    "country": "Sweden",
+                    "year": "1986",
+                    "format": ["Vinyl", "LP", "Album"],
+                    "label": ["Mariann", "Mariann Records", "Mariann Records", "Fri Reklam", "KMH Studios", "SIB-Tryck AB, Norsborg", "Grammoplast"],
+                    "type": "master",
+                    "genre": ["Electronic", "Pop"],
+                    "style": ["Synth-pop", "Schlager"],
+                    "id": 5555555,
+                    "barcode": ["BIEM/n\\u00a9b", "MLPH-1622-A 860414GP BA-GP", "MLPH-1622-B 860414GP BA-GP"],
+                    "user_data": {
+                     "in_wantlist": false,
+                     "in_collection": false
+                    },
+                    "master_id": 315620,
+                    "master_url": "https://api.discogs.com/masters/315620",
+                    "uri": "/Lena-Philipsson-K%C3%A4rleken-%C3%84r-Evig/master/315620",
+                    "catno": "MLPH 1622",
+                    "title": "Ariana Grande - Just another song.",
+                    "thumb": "https://img.discogs.com/K-iaOq7zlRC0q5RfRdA9U8VisCE=/fit-in/150x150/filters:strip_icc():format(jpeg):mode_rgb():quality(40)/discogs-images/R-2229646-1320883037.jpeg.jpg",
+                    "cover_image": "https://img.discogs.com/58RI-XKBhD42w1SKIJhXvUIMFqA=/fit-in/450x450/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-2229646-1320883037.jpeg.jpg",
+                    "resource_url": "https://api.discogs.com/masters/315620",
+                    "community": {
+                     "want": 24,
+                     "have": 207
+                    }
+                   }
+                  ]
+                 }
+                """;
+    }
+
     public static String productCreatedResponse() {
         return """
                 {

@@ -64,7 +64,8 @@ class LookupFacadeImplTest {
                 .setBody(ExampleJsonResponses.releaseInfo())
                 .addHeader("Content-Type", "application/json"));
         //when
-        Mono<String> releaseInfoResponse = lookupFacadeImpl.getByReleaseId("releaseId");
+        int releaseId = 123;
+        Mono<String> releaseInfoResponse = lookupFacadeImpl.getByReleaseId(releaseId);
         //then
         StepVerifier.create(releaseInfoResponse)
                 .expectNextMatches(s -> s.equals(ExampleJsonResponses.releaseInfo()))
@@ -72,7 +73,7 @@ class LookupFacadeImplTest {
 
         RecordedRequest recordedRequest = mockBackend.takeRequest();
         assertThat(recordedRequest.getMethod()).isEqualTo("GET");
-        assertThat(recordedRequest.getPath()).isEqualTo("/releases/releaseId");
+        assertThat(recordedRequest.getPath()).isEqualTo("/releases/123");
         assertThat(recordedRequest.getHeader("Authorization")).isEqualTo("Discogs token=secretToken");
 
     }

@@ -16,18 +16,14 @@ import static com.nilsson.vinylrecordsales.lookup.ExternalIdentifier.*;
 
 public class RecordInformationConverter {
 
-    public Optional<RecordInformation> getRecordInformation(JsonObject chosenRecord, JsonObject releaseResponse) {
+    public Optional<RecordInformation> getRecordInformation(String title, JsonObject releaseResponse) {
         return Optional.of(RecordInformation.builder()
-                .withTitle(extractTitle(chosenRecord))
+                .withTitle(title)
                 .withTracklist(extractTracklist(releaseResponse))
                 .withYear(extractYear(releaseResponse))
                 .withStyle(extractStyle(releaseResponse))
                 .withGenre(extractGenre(releaseResponse))
                 .build());
-    }
-
-    private String extractTitle(JsonObject releaseResponse) {
-        return releaseResponse.get(RECORD_TITLE.toString()).getAsString();
     }
 
     private List<String> extractGenre(JsonObject releaseResponse) {

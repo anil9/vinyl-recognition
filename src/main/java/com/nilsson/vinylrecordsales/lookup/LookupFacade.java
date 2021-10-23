@@ -6,5 +6,5 @@ public interface LookupFacade {
 
     Mono<String> findByCatalogueNumber(String catalogueNumber);
 
-    Mono<String> getByReleaseId(String releaseId);
+    Mono<String> getByReleaseId(Integer releaseId);
 }

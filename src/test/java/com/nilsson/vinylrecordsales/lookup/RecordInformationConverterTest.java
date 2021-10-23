@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RecordInformationConverterTest {
 
+    private static final String TITLE = "title";
     private RecordInformationConverter recordInformationConverter;
 
     @BeforeEach
@@ -25,15 +26,14 @@ class RecordInformationConverterTest {
     @Test
     void shouldConvertToRecordInformation() {
         //given
-        JsonObject chosenRecord = new Gson().fromJson(ExampleJsonResponses.record(), JsonObject.class);
         JsonObject releaseResponse = new Gson().fromJson(ExampleJsonResponses.releaseInfo(), JsonObject.class);
 
         //when
-        Optional<RecordInformation> recordInformation = recordInformationConverter.getRecordInformation(chosenRecord, releaseResponse);
+        Optional<RecordInformation> recordInformation = recordInformationConverter.getRecordInformation(TITLE, releaseResponse);
 
         //then
         assertThat(recordInformation).hasValue(RecordInformation.builder()
-                .withTitle("Lena Philipsson - Kärleken Är Evig.")
+                .withTitle(TITLE)
                 .withYear(Year.of(1986))
                 .withGenre(List.of("Electronic", "Pop"))
                 .withStyle(List.of("Synth-pop", "Schlager"))
@@ -45,15 +45,14 @@ class RecordInformationConverterTest {
     @Test
     void shouldConvertToRecordInformationWithoutYear() {
         //given
-        JsonObject chosenRecord = new Gson().fromJson(ExampleJsonResponses.record(), JsonObject.class);
         JsonObject releaseResponseWithoutYear = new Gson().fromJson(ExampleJsonResponses.releaseInfoWithoutYear(), JsonObject.class);
 
         //when
-        Optional<RecordInformation> recordInformation = recordInformationConverter.getRecordInformation(chosenRecord, releaseResponseWithoutYear);
+        Optional<RecordInformation> recordInformation = recordInformationConverter.getRecordInformation(TITLE, releaseResponseWithoutYear);
 
         //then
         assertThat(recordInformation).hasValue(RecordInformation.builder()
-                .withTitle("Lena Philipsson - Kärleken Är Evig.")
+                .withTitle(TITLE)
                 .withYear(null)
                 .withGenre(List.of("Electronic", "Pop"))
                 .withStyle(List.of("Synth-pop", "Schlager"))

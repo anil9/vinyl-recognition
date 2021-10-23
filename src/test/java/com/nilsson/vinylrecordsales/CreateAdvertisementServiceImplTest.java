@@ -8,7 +8,6 @@ import com.nilsson.vinylrecordsales.domain.RecordInformation;
 import com.nilsson.vinylrecordsales.domain.RecordInformationTestBuilder;
 import com.nilsson.vinylrecordsales.lookup.LookupService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -54,25 +53,6 @@ class CreateAdvertisementServiceImplTest {
         //then
 
         inOrder.verify(lookupService).getRecordInformationByCatalogueNumber(catalogueNumber);
-        inOrder.verify(adFactory).fromTemplate(recordInformation.orElseThrow());
-        inOrder.verify(advertisementFacade).createProduct(ad);
-    }
-
-    @Test
-    @Disabled("not yet implemented")
-    void shouldUseExtraProvidedTitleWordsWhenGatherInfoAndPostAd() {
-        //given
-        String catalogueNumber = "catalogueNumber";
-        InOrder inOrder = inOrder(lookupService, adFactory, advertisementFacade);
-        Optional<RecordInformation> recordInformation = Optional.of(RecordInformationTestBuilder.populatedRecordInformationBuilder().build());
-        when(lookupService.getRecordInformationByCatalogueNumber(catalogueNumber)).thenReturn(recordInformation);
-        AdvertisementInformation ad = AdvertisementInformationTestBuilder.populatedAdvertisementInformationBuilder().build();
-        when(adFactory.fromTemplate(recordInformation.orElseThrow())).thenReturn(ad);
-        //when
-        createAdvertisementService.createAdvertisement(catalogueNumber, "extra", "title", "words");
-        //then
-
-        inOrder.verify(lookupService).getRecordInformationByCatalogueNumber(catalogueNumber, "extra", "title", "words");
         inOrder.verify(adFactory).fromTemplate(recordInformation.orElseThrow());
         inOrder.verify(advertisementFacade).createProduct(ad);
     }

@@ -32,7 +32,7 @@ public class LookupFacadeImpl implements LookupFacade {
     }
 
     @Override
-    public Mono<String> getByReleaseId(String releaseId) {
+    public Mono<String> getByReleaseId(Integer releaseId) {
         WebClient.RequestHeadersUriSpec<?> uriSpec = client.get();
 
         WebClient.RequestHeadersSpec<?> headersSpec = uriSpec.uri("/releases/" + releaseId);
