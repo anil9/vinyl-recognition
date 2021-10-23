@@ -302,7 +302,7 @@ public class ExampleJsonResponses {
                 """;
     }
 
-    public static String exampleSuccessJsonResponse() {
+    public static String lookupResponse() {
         return """
                 {
                   "pagination": {

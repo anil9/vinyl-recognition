@@ -1,10 +1,10 @@
 package com.nilsson.vinylrecordsales.lookup;
 
-import com.nilsson.vinylrecordsales.domain.RecordInformation;
-
-import java.util.Optional;
+import reactor.core.publisher.Mono;
 
 public interface LookupFacade {
 
-    Optional<RecordInformation> getRecordInformationByCatalogueNumber(String catalogueNumber);
+    Mono<String> findByCatalogueNumber(String catalogueNumber);
+
+    Mono<String> getByReleaseId(String releaseId);
 }

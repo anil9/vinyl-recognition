@@ -1,10 +1,13 @@
 package com.nilsson.vinylrecordsales;
 
-//@SpringBootTest
-//class VinylRecognitionApplicationTests {
-//
-//	@Test
-//	void contextLoads() {
-//	}
-//
-//}
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class VinylRecognitionApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
