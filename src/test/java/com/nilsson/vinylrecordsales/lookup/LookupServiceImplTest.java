@@ -86,11 +86,22 @@ class LookupServiceImplTest {
     @Test
     void shouldReturnEmptyRecordIfTitleCantBeDetermined() {
         //given
-        String releaseInfoResponse = ExampleJsonResponses.releaseInfo();
-        JsonObject releaseResponse = new Gson().fromJson(releaseInfoResponse, JsonObject.class);
         when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.ambiguousLookupResponse()));
         //when
         Optional<RecordInformation> recordInformation = lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "fel", "fel2", "fel3");
+        //then
+        verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
+        verifyNoMoreInteractions(lookupFacade);
+        verifyNoInteractions(recordInformationConverter);
+        assertThat(recordInformation).isEmpty();
+    }
+
+    @Test
+    void shouldReturnEmptyRecordIfAnyProvidedExtraWordDoesntMatchTitle() {
+        //given
+        when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.ambiguousLookupResponse()));
+        //when
+        Optional<RecordInformation> recordInformation = lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "Lena", "Philipsson", "Evig", "fel");
         //then
         verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
         verifyNoMoreInteractions(lookupFacade);
