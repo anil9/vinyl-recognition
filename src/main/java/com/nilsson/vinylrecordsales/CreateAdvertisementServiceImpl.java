@@ -28,7 +28,7 @@ public class CreateAdvertisementServiceImpl implements CreateAdvertisementServic
 
     @Override
     public ProductId createAdvertisement(String catalogueNumber, String... extraTitleWords) {
-        RecordInformation recordInformation = lookupService.getRecordInformationByCatalogueNumber(catalogueNumber).orElseThrow();
+        RecordInformation recordInformation = lookupService.getRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWords).orElseThrow();
         LOG.info("Fetched record information, title={}", recordInformation.getTitle());
         LOG.debug("{}", recordInformation);
 

@@ -56,4 +56,23 @@ class CreateAdvertisementServiceImplTest {
         inOrder.verify(adFactory).fromTemplate(recordInformation.orElseThrow());
         inOrder.verify(advertisementFacade).createProduct(ad);
     }
+
+    @Test
+    void shouldUseExtraTitleWordsAndGatherInfoAndPostAd() {
+        //given
+        String catalogueNumber = "catalogueNumber";
+        InOrder inOrder = inOrder(lookupService, adFactory, advertisementFacade);
+        Optional<RecordInformation> recordInformation = Optional.of(RecordInformationTestBuilder.populatedRecordInformationBuilder().build());
+        String extraTitleWord = "extra";
+        when(lookupService.getRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWord)).thenReturn(recordInformation);
+        AdvertisementInformation ad = AdvertisementInformationTestBuilder.populatedAdvertisementInformationBuilder().build();
+        when(adFactory.fromTemplate(recordInformation.orElseThrow())).thenReturn(ad);
+        //when
+        createAdvertisementService.createAdvertisement(catalogueNumber, extraTitleWord);
+        //then
+
+        inOrder.verify(lookupService).getRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWord);
+        inOrder.verify(adFactory).fromTemplate(recordInformation.orElseThrow());
+        inOrder.verify(advertisementFacade).createProduct(ad);
+    }
 }
