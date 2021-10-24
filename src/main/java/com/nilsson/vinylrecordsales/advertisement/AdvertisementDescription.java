@@ -1,10 +1,11 @@
 package com.nilsson.vinylrecordsales.advertisement;
 
+import com.nilsson.vinylrecordsales.domain.RecordInformation;
+
 import java.time.Year;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.nilsson.vinylrecordsales.domain.RecordInformation;
+import java.util.stream.Stream;
 
 public class AdvertisementDescription {
 	private static final String STANDARD_DESCRIPTION = """
@@ -42,7 +43,8 @@ public class AdvertisementDescription {
 					.map(entry -> String.join(" ", entry.getKey(), entry.getValue()))
 					.collect(Collectors.joining("\n"));
 		}
-		return String.join("\n", STANDARD_DESCRIPTION, year, genre, style, tracklist);
-
+		return Stream.of(STANDARD_DESCRIPTION, year, genre, style, tracklist)
+				.filter(s -> !s.isBlank())
+				.collect(Collectors.joining("\n"));
 	}
 }
