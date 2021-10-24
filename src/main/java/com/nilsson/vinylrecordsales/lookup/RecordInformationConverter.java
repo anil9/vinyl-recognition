@@ -43,7 +43,9 @@ public class RecordInformationConverter {
 
     private Year extractYear(JsonObject releaseResponse) {
         var element = releaseResponse.get(YEAR.toString());
-        return element == null ? null : Year.of(element.getAsInt());
+        if (element == null || element.getAsInt() == 0) return null;
+
+        return Year.of(element.getAsInt());
     }
 
     private Map<String, String> extractTracklist(JsonObject jsonObject) {

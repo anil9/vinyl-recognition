@@ -85,4 +85,25 @@ class RecordInformationConverterTest {
 
     }
 
+    @Test
+    void shouldConvertToRecordInformationWithoutYearWhenYearIsZero() {
+        //given
+        JsonObject releaseResponseWithoutYear = new Gson().fromJson(ExampleJsonResponses.releaseInfoWithZeroYear(), JsonObject.class);
+
+        //when
+        Optional<RecordInformation> recordInformation = recordInformationConverter.getRecordInformation(TITLE, releaseResponseWithoutYear);
+
+        //then
+        assertThat(recordInformation).hasValue(RecordInformation.builder()
+                .withTitle(TITLE)
+                .withYear(null)
+                .withGenre(List.of("Electronic", "Pop"))
+                .withStyle(List.of("Synth-pop", "Schlager"))
+                .withTracklist(Map.of("Kärleken Är Evig", "3:03",
+                        "Åh Amadeus", "3:35"))
+                .build());
+
+
+    }
+
 }
