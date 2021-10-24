@@ -77,18 +77,12 @@ public class LookupServiceImpl implements LookupService {
                     .map(JsonElement::getAsInt);
         }
         return Optional.empty();
-//        return IntStream.range(0, catalogueNumberResponse.size())
-//                .mapToObj(catalogueNumberResponse::get)
-//                .map(JsonElement::getAsJsonObject)
-//                .filter(isReleaseRecord())
-//                .filter(titleMatchesExtraWords(extraTitleWords))
-//                .findFirst()
-//                .map(correctResponse -> correctResponse.get(RELEASE_ID.toString()))
-//                .map(JsonElement::getAsInt);
     }
 
     private Predicate<JsonObject> titleMatchesExtraWords(String[] extraTitleWords) {
-        return response -> Arrays.stream(extraTitleWords).allMatch(response.get(TRACK_TITLE.toString()).getAsString()::contains);
+        return response -> Arrays.stream(extraTitleWords)
+                .map(String::toLowerCase)
+                .allMatch(response.get(TRACK_TITLE.toString()).getAsString().toLowerCase()::contains);
     }
 
     private Predicate<JsonObject> isReleaseRecord() {

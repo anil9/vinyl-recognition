@@ -65,7 +65,7 @@ class LookupServiceImplTest {
     }
 
     @Test
-    void shouldUseExtraProvidedTitleWordsWhenGatherInfoAndPostAd() {
+    void shouldUseExtraProvidedTitleWordsWhenGatherInfo() {
         //given
         String releaseInfoResponse = ExampleJsonResponses.releaseInfo();
         JsonObject releaseResponse = new Gson().fromJson(releaseInfoResponse, JsonObject.class);
@@ -74,6 +74,25 @@ class LookupServiceImplTest {
         InOrder inOrder = Mockito.inOrder(lookupFacade, recordInformationConverter);
         //when
         lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "Lena", "Philipsson", "Evig");
+        //then
+        inOrder.verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
+        inOrder.verify(lookupFacade).getByReleaseId(RELEASE_ID);
+
+        verify(recordInformationConverter).getRecordInformation(TITLE, releaseResponse);
+        verifyNoMoreInteractions(lookupFacade);
+        verifyNoMoreInteractions(recordInformationConverter);
+    }
+
+    @Test
+    void providedTitleWordsIsCaseInsensitiveWhenGatheringInfo() {
+        //given
+        String releaseInfoResponse = ExampleJsonResponses.releaseInfo();
+        JsonObject releaseResponse = new Gson().fromJson(releaseInfoResponse, JsonObject.class);
+        when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.ambiguousLookupResponse()));
+        when(lookupFacade.getByReleaseId(RELEASE_ID)).thenReturn(Mono.just(releaseInfoResponse));
+        InOrder inOrder = Mockito.inOrder(lookupFacade, recordInformationConverter);
+        //when
+        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "LeNa", "PhIlIpSsoN", "EVIG");
         //then
         inOrder.verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
         inOrder.verify(lookupFacade).getByReleaseId(RELEASE_ID);
