@@ -11,7 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.nilsson.vinylrecordsales.lookup.ExternalIdentifier.*;
@@ -52,36 +55,44 @@ public class LookupServiceImpl implements LookupService {
     }
 
     private Optional<Integer> findCorrectReleaseId(JsonArray catalogueNumberResponse, String... extraTitleWords) {
-        if (extraTitleWords.length > 0) {
-            return findReleaseIdWithExtraTitleWords(catalogueNumberResponse, extraTitleWords);
-        } else {
-            if (!hasDistinctTitle(catalogueNumberResponse)) {
-                return Optional.empty();
-            }
-            var chosenRecord = catalogueNumberResponse.get(0).getAsJsonObject();
-            return Optional.of(extractReleaseId(chosenRecord));
+        if (extraTitleWords.length <= 0 && !hasDistinctTitle(catalogueNumberResponse)) {
+            return Optional.empty();
         }
+        return findReleaseId(catalogueNumberResponse, extraTitleWords);
 
 
     }
 
-    private Optional<Integer> findReleaseIdWithExtraTitleWords(JsonArray catalogueNumberResponse, String... extraTitleWords) {
-        return IntStream.range(0, catalogueNumberResponse.size())
+    private Optional<Integer> findReleaseId(JsonArray catalogueNumberResponse, String... extraTitleWords) {
+        List<JsonObject> releaseRecordsWithTitlesMatchingExtraWords = IntStream.range(0, catalogueNumberResponse.size())
                 .mapToObj(catalogueNumberResponse::get)
                 .map(JsonElement::getAsJsonObject)
-                .filter(response -> titleMatchesExtraWords(response.get(TRACK_TITLE.toString()).getAsString(), extraTitleWords))
-                .findFirst()
-                .map(correctResponse -> correctResponse.get(RELEASE_ID.toString()))
-                .map(JsonElement::getAsInt);
+                .filter(isReleaseRecord())
+                .filter(titleMatchesExtraWords(extraTitleWords))
+                .collect(Collectors.toList());
+        if (hasDistinctTitle(releaseRecordsWithTitlesMatchingExtraWords)) {
+            return releaseRecordsWithTitlesMatchingExtraWords.stream()
+                    .findFirst()
+                    .map(correctResponse -> correctResponse.get(RELEASE_ID.toString()))
+                    .map(JsonElement::getAsInt);
+        }
+        return Optional.empty();
+//        return IntStream.range(0, catalogueNumberResponse.size())
+//                .mapToObj(catalogueNumberResponse::get)
+//                .map(JsonElement::getAsJsonObject)
+//                .filter(isReleaseRecord())
+//                .filter(titleMatchesExtraWords(extraTitleWords))
+//                .findFirst()
+//                .map(correctResponse -> correctResponse.get(RELEASE_ID.toString()))
+//                .map(JsonElement::getAsInt);
     }
 
-    private boolean titleMatchesExtraWords(String title, String... extraTitleWords) {
-        return Arrays.stream(extraTitleWords).allMatch(title::contains);
+    private Predicate<JsonObject> titleMatchesExtraWords(String[] extraTitleWords) {
+        return response -> Arrays.stream(extraTitleWords).allMatch(response.get(TRACK_TITLE.toString()).getAsString()::contains);
     }
 
-
-    private Integer extractReleaseId(JsonObject chosenRecord) {
-        return chosenRecord.get(RELEASE_ID.toString()).getAsInt();
+    private Predicate<JsonObject> isReleaseRecord() {
+        return response -> response.get(TYPE.toString()).getAsString().equals(RELEASE.toString());
     }
 
     private JsonObject getResponseFromReleaseId(Integer releaseId) {
@@ -100,10 +111,16 @@ public class LookupServiceImpl implements LookupService {
     }
 
     private boolean hasDistinctTitle(JsonArray results) {
+        return hasDistinctTitle(IntStream.range(0, results.size())
+                .mapToObj(results::get)
+                .map(JsonElement::getAsJsonObject)
+                .collect(Collectors.toList()));
+    }
+
+    private boolean hasDistinctTitle(List<JsonObject> jsonObjects) {
         var titles = new HashSet<String>();
-        for (JsonElement result : results) {
-            var recordObj = result.getAsJsonObject();
-            titles.add(recordObj.get(RECORD_TITLE.toString()).getAsString());
+        for (JsonObject element : jsonObjects) {
+            titles.add(element.get(RECORD_TITLE.toString()).getAsString());
         }
 
         boolean distinctTitle = titles.size() == 1;

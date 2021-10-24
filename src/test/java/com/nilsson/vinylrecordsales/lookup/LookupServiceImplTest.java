@@ -97,6 +97,19 @@ class LookupServiceImplTest {
     }
 
     @Test
+    void shouldReturnEmptyRecordIfTitleCantBeDeterminedWithExtraWords() {
+        //given
+        when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.ambiguousLookupResponse()));
+        //when
+        Optional<RecordInformation> recordInformation = lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "Philipsson");
+        //then
+        verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
+        verifyNoMoreInteractions(lookupFacade);
+        verifyNoInteractions(recordInformationConverter);
+        assertThat(recordInformation).isEmpty();
+    }
+
+    @Test
     void shouldReturnEmptyRecordIfAnyProvidedExtraWordDoesntMatchTitle() {
         //given
         when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.ambiguousLookupResponse()));
@@ -107,5 +120,42 @@ class LookupServiceImplTest {
         verifyNoMoreInteractions(lookupFacade);
         verifyNoInteractions(recordInformationConverter);
         assertThat(recordInformation).isEmpty();
+    }
+
+    @Test
+    void shouldPickReleaseIdFromRelease() {
+        //given
+        String releaseInfoResponse = ExampleJsonResponses.releaseInfo();
+        JsonObject releaseResponse = new Gson().fromJson(releaseInfoResponse, JsonObject.class);
+        when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.lookupResponseContainingMasterRelease()));
+        when(lookupFacade.getByReleaseId(RELEASE_ID)).thenReturn(Mono.just(releaseInfoResponse));
+        //when
+        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER);
+        //then
+        verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
+        verify(lookupFacade).getByReleaseId(RELEASE_ID);
+
+        verify(recordInformationConverter).getRecordInformation(TITLE, releaseResponse);
+        verifyNoMoreInteractions(lookupFacade);
+        verifyNoMoreInteractions(recordInformationConverter);
+    }
+
+    @Test
+    void shouldPickReleaseIdFromReleaseWhenProvidedWords() {
+        //given
+        String releaseInfoResponse = ExampleJsonResponses.releaseInfo();
+        JsonObject releaseResponse = new Gson().fromJson(releaseInfoResponse, JsonObject.class);
+        when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.lookupResponseContainingMasterRelease()));
+        when(lookupFacade.getByReleaseId(RELEASE_ID)).thenReturn(Mono.just(releaseInfoResponse));
+        String extraTitleWords = "Philipsson";
+        //when
+        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, extraTitleWords);
+        //then
+        verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
+        verify(lookupFacade).getByReleaseId(RELEASE_ID);
+
+        verify(recordInformationConverter).getRecordInformation(TITLE, releaseResponse);
+        verifyNoMoreInteractions(lookupFacade);
+        verifyNoMoreInteractions(recordInformationConverter);
     }
 }
