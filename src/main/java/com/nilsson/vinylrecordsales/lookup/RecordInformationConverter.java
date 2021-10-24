@@ -5,10 +5,7 @@ import com.google.gson.JsonObject;
 import com.nilsson.vinylrecordsales.domain.RecordInformation;
 
 import java.time.Year;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -34,7 +31,11 @@ public class RecordInformationConverter {
     }
 
     private List<String> extractStyle(JsonObject releaseResponse) {
-        var styles = releaseResponse.get(STYLES.toString()).getAsJsonArray();
+        JsonElement styleJson = releaseResponse.get(STYLES.toString());
+        if (styleJson == null || styleJson.isJsonNull()) {
+            return Collections.emptyList();
+        }
+        var styles = styleJson.getAsJsonArray();
         return StreamSupport.stream(styles.spliterator(), true)
                 .map(JsonElement::getAsString)
                 .collect(Collectors.toList());

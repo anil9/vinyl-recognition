@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Year;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -56,6 +57,27 @@ class RecordInformationConverterTest {
                 .withYear(null)
                 .withGenre(List.of("Electronic", "Pop"))
                 .withStyle(List.of("Synth-pop", "Schlager"))
+                .withTracklist(Map.of("Kärleken Är Evig", "3:03",
+                        "Åh Amadeus", "3:35"))
+                .build());
+
+
+    }
+
+    @Test
+    void shouldConvertToRecordInformationWithoutStyle() {
+        //given
+        JsonObject releaseResponseWithoutYear = new Gson().fromJson(ExampleJsonResponses.releaseInfoWithoutStyle(), JsonObject.class);
+
+        //when
+        Optional<RecordInformation> recordInformation = recordInformationConverter.getRecordInformation(TITLE, releaseResponseWithoutYear);
+
+        //then
+        assertThat(recordInformation).hasValue(RecordInformation.builder()
+                .withTitle(TITLE)
+                .withYear(Year.of(1986))
+                .withGenre(List.of("Electronic", "Pop"))
+                .withStyle(Collections.emptyList())
                 .withTracklist(Map.of("Kärleken Är Evig", "3:03",
                         "Åh Amadeus", "3:35"))
                 .build());

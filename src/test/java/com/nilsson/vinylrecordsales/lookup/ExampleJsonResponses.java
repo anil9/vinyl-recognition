@@ -302,6 +302,33 @@ public class ExampleJsonResponses {
                 """;
     }
 
+    public static String releaseInfoWithoutStyle() {
+        return """
+                {
+                  "title": "Kärleken Är Evig.",
+                  "genres": [
+                    "Electronic",
+                    "Pop"
+                  ],
+                   "year": 1986,
+                  "tracklist": [
+                    {
+                      "position": "A1",
+                      "type_": "track",
+                      "title": "Kärleken Är Evig",
+                      "duration": "3:03"
+                    },
+                    {
+                      "position": "A2",
+                      "type_": "track",
+                      "title": "Åh Amadeus",
+                      "duration": "3:35"
+                    }
+                  ]
+                }
+                """;
+    }
+
     public static String lookupResponse() {
         return """
                 {
