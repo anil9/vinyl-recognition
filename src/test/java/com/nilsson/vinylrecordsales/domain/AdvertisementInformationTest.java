@@ -34,7 +34,7 @@ class AdvertisementInformationTest {
 				.withTax(new Tax(25))
 				.withProductCategory(ProductCategory.OTHER)
 				.withCurrency(Currency.getInstance(Locale.CANADA))
-				.withTargetMarketplace(TargetMarketplace.TRADERA)
+				.withTargetMarketplace(new TargetMarketplace("anyId"))
 				.build();
 		//then
 		assertThat(ad.getTitle()).isEqualTo(recordInformation.getTitle());

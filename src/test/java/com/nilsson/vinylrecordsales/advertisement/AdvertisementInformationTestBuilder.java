@@ -19,6 +19,6 @@ public class AdvertisementInformationTestBuilder {
                 .withShippingInformation(new ShippingInformation(ShippingCompany.SCHENKER, new BigDecimal("70"), PickupStrategy.ALLOW_PICKUP))
                 .withTax(new Tax(25))
                 .withCurrency(Currency.getInstance(new Locale("sv", "SE")))
-                .withTargetMarketplace(TargetMarketplace.TRADERA);
+                .withTargetMarketplace(new TargetMarketplace("anyId"));
     }
 }

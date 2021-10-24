@@ -14,13 +14,15 @@ public class AdvertisementInformationFactory {
     private final Integer folderId;
     private final BigDecimal auctionPrice;
     private final ShippingInformation shippingInformation;
+    private final TargetMarketplace targetMarketplace;
 
     public AdvertisementInformationFactory(Environment environment) {
         requireNonNull(environment, "environment");
         this.folderId = Integer.parseInt(environment.getRequiredProperty(FOLDER_ID.value));
         this.auctionPrice = new BigDecimal(environment.getRequiredProperty(AUCTION_PRICE.value));
+        this.targetMarketplace = new TargetMarketplace(environment.getRequiredProperty(MARKETPLACE_ACCOUNT_ID.value));
         BigDecimal shippingCost = new BigDecimal(environment.getRequiredProperty(SHIPPING_COST.value));
-        shippingInformation = new ShippingInformation(ShippingCompany.SCHENKER, shippingCost, PickupStrategy.ALLOW_PICKUP);
+        this.shippingInformation = new ShippingInformation(ShippingCompany.SCHENKER, shippingCost, PickupStrategy.ALLOW_PICKUP);
     }
 
     public AdvertisementInformation fromTemplate(RecordInformation recordInformation) {
@@ -37,7 +39,7 @@ public class AdvertisementInformationFactory {
                 .withShippingInformation(shippingInformation)
                 .withTax(new Tax(25))
                 .withCurrency(Currency.getInstance(new Locale("sv", "SE")))
-                .withTargetMarketplace(TargetMarketplace.TRADERA)
+                .withTargetMarketplace(targetMarketplace)
                 .withProductCategory(productCategory)
                 .build();
     }
@@ -45,7 +47,8 @@ public class AdvertisementInformationFactory {
     enum AdvertisementInfoConfigProperty {
         FOLDER_ID("advertisement.template.folderid"),
         AUCTION_PRICE("advertisement.template.auctionprice"),
-        SHIPPING_COST("advertisement.template.shippingcost");
+        SHIPPING_COST("advertisement.template.shippingcost"),
+        MARKETPLACE_ACCOUNT_ID("advertisement.template.marketplace.tradera.id");
 
 
         public final String value;

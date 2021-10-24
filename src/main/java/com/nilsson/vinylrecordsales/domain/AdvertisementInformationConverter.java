@@ -17,8 +17,6 @@ public class AdvertisementInformationConverter {
         parentJson.put("prices", populatePricesField(ad));
         parentJson.put("shipping", populateShippingField(ad));
         return parentJson;
-
-
     }
 
     private JSONObject populateShippingField(AdvertisementInformation ad) {
@@ -28,7 +26,7 @@ public class AdvertisementInformationConverter {
         marketplaceShipping.put("pickup", shippingInfo.getPickupStrategy().isPickupAllowed());
         marketplaceShipping.put(shippingInfo.getShippingCompany().getValue(), shippingInfo.getShippingPrice().toPlainString());
         JSONObject targetMarketplaceId = new JSONObject();
-        targetMarketplaceId.put(TargetMarketplace.TRADERA.getId(), marketplaceShipping);
+        targetMarketplaceId.put(ad.getTargetMarketplace().getId(), marketplaceShipping);
 
         return targetMarketplaceId;
     }
@@ -40,7 +38,7 @@ public class AdvertisementInformationConverter {
         marketplacePricing.put("auction", auctionInformation);
         marketplacePricing.put("currency", ad.getCurrency().getCurrencyCode());
         JSONObject targetMarketplaceId = new JSONObject();
-        targetMarketplaceId.put(TargetMarketplace.TRADERA.getId(), marketplacePricing);
+        targetMarketplaceId.put(ad.getTargetMarketplace().getId(), marketplacePricing);
         return targetMarketplaceId;
     }
 
