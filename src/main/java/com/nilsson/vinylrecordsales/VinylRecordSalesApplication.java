@@ -15,10 +15,10 @@ public class VinylRecordSalesApplication {
         context.refresh();
         SpringApplication.run(VinylRecordSalesApplication.class, args);
 
-        var catalogueNumber = "LBLP 008";
-        CreateAdvertisementService advertisementService = context.getBean(CreateAdvertisementService.class);
-        advertisementService.createAdvertisement(catalogueNumber);
-        System.exit(0);
+//        var catalogueNumber = "LBLP 008";
+//        CreateAdvertisementService advertisementService = context.getBean(CreateAdvertisementService.class);
+//        advertisementService.createAdvertisement(catalogueNumber);
+//        System.exit(0);
 
     }
 

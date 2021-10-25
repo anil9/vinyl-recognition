@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Form</h1>
+<form action="#" th:action="@{/record}" th:object="${recordFinder}" method="post">
+    <p>Catalogue id: <input type="text" th:field="*{catalogueId}"></p>
+    <p>Extra title words: <input type="text" th:field="*{extraTitleWords}"></p>
+    <p><input type="submit" value="Submit"></p>
+
+</form>
+</body>
+</html>
