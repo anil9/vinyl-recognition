@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.Optional;
 
@@ -47,6 +48,30 @@ class LookupServiceImplTest {
         //when
         lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER);
         //then
+        inOrder.verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
+        inOrder.verify(lookupFacade).getByReleaseId(RELEASE_ID);
+
+        verify(recordInformationConverter).getRecordInformation(TITLE, releaseResponse);
+        verifyNoMoreInteractions(lookupFacade);
+        verifyNoMoreInteractions(recordInformationConverter);
+    }
+
+    @Test
+    void shouldReturnRecordInfoMono() {
+        //given
+        String releaseInfoResponse = ExampleJsonResponses.releaseInfo();
+        JsonObject releaseResponse = new Gson().fromJson(releaseInfoResponse, JsonObject.class);
+        when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.lookupResponse()));
+        when(lookupFacade.getByReleaseId(RELEASE_ID)).thenReturn(Mono.just(releaseInfoResponse));
+        RecordInformation recordInformation = mock(RecordInformation.class);
+        when(recordInformationConverter.getRecordInformation(TITLE, releaseResponse)).thenReturn(Optional.of(recordInformation));
+        InOrder inOrder = Mockito.inOrder(lookupFacade, recordInformationConverter);
+        //when
+        Mono<Optional<RecordInformation>> informationByCatalogueNumber = lookupService.getMonoRecordInformationByCatalogueNumber(CATALOGUE_NUMBER);
+        //then
+        StepVerifier.create(informationByCatalogueNumber.log())
+                .expectNext(Optional.of(recordInformation))
+                .verifyComplete();
         inOrder.verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
         inOrder.verify(lookupFacade).getByReleaseId(RELEASE_ID);
 

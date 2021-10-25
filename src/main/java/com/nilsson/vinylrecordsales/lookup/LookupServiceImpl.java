@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.nilsson.vinylrecordsales.domain.RecordInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
@@ -32,15 +33,28 @@ public class LookupServiceImpl implements LookupService {
 
     @Override
     public Optional<RecordInformation> getRecordInformationByCatalogueNumber(String catalogueNumber, String... extraTitleWords) {
-        JsonArray catalogueNumberResponse = getResponseFromCatalogueNumber(catalogueNumber);
+        return getMonoRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWords).block();
+    }
+
+    @Override
+    public Mono<Optional<RecordInformation>> getMonoRecordInformationByCatalogueNumber(String catalogueNumber, String... extraTitleWords) {
+        return lookupFacade.findByCatalogueNumber(catalogueNumber)
+                .map(JsonParser::parseString)
+                .map(JsonElement::getAsJsonObject)
+                .map(jsonObject -> jsonObject.getAsJsonArray("results"))
+                .flatMap(catalogueNumberResponse -> createRecordInformation(catalogueNumberResponse, extraTitleWords));
+    }
+
+    private Mono<Optional<RecordInformation>> createRecordInformation(JsonArray catalogueNumberResponse, String... extraTitleWords) {
         Optional<Integer> releaseId = findCorrectReleaseId(catalogueNumberResponse, extraTitleWords);
         if (releaseId.isEmpty()) {
-            return Optional.empty();
+            return Mono.just(Optional.empty());
         }
         String title = findTitle(catalogueNumberResponse, releaseId.get());
-        JsonObject releaseResponse = getResponseFromReleaseId(releaseId.get());
-        return recordInformationConverter.getRecordInformation(title, releaseResponse);
-
+        return lookupFacade.getByReleaseId(releaseId.get())
+                .map(JsonParser::parseString)
+                .map(JsonElement::getAsJsonObject)
+                .map(releaseResponse -> recordInformationConverter.getRecordInformation(title, releaseResponse));
     }
 
     private String findTitle(JsonArray catalogueNumberResponse, Integer releaseId) {
@@ -87,21 +101,6 @@ public class LookupServiceImpl implements LookupService {
 
     private Predicate<JsonObject> isReleaseRecord() {
         return response -> response.get(TYPE.toString()).getAsString().equals(RELEASE.toString());
-    }
-
-    private JsonObject getResponseFromReleaseId(Integer releaseId) {
-        String response = lookupFacade.getByReleaseId(releaseId).block();
-        assert response != null;
-        LOG.debug(response);
-        return JsonParser.parseString(response).getAsJsonObject();
-    }
-
-    private JsonArray getResponseFromCatalogueNumber(String catalogueNumber) {
-        String response = lookupFacade.findByCatalogueNumber(catalogueNumber).block();
-        assert response != null;
-        LOG.debug(response);
-        var asJsonObject = JsonParser.parseString(response).getAsJsonObject();
-        return asJsonObject.getAsJsonArray("results");
     }
 
     private boolean hasDistinctTitle(JsonArray results) {
