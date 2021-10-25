@@ -86,9 +86,11 @@ class AdvertisementFacadeImplTest {
         when(converter.asJson(any())).thenReturn(mockedJSON);
         String expectedJSONRequest = "mockedJson";
         when(mockedJSON.toString()).thenReturn(expectedJSONRequest);
+        AdvertisementInformation advertisementInformation = AdvertisementInformationTestBuilder.populatedAdvertisementInformationBuilder()
+                .build();
         //when
         AdvertisementFacadeException advertisementFacadeException = assertThrows(AdvertisementFacadeException.class,
-                () -> advertisementFacade.createProduct(null));
-        assertThat(advertisementFacadeException.getMessage()).isEqualTo(format("Error creating product. requestBody=%s", mockedJSON));
+                () -> advertisementFacade.createProduct(advertisementInformation));
+        assertThat(advertisementFacadeException.getMessage()).isEqualTo(format("Error creating product. advertisementInformation=%s", advertisementInformation));
     }
 }

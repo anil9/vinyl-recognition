@@ -7,6 +7,7 @@ import com.nilsson.vinylrecordsales.domain.ProductId;
 import org.json.JSONObject;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
@@ -28,22 +29,27 @@ public class AdvertisementFacadeImpl implements AdvertisementFacade {
 
     @Override
     public ProductId createProduct(AdvertisementInformation advertisementInformation) {
-        String requestBody = converter.asJson(advertisementInformation).toString();
         try {
-            return client.post()
-                    .uri("/products")
-                    .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                    .header(AUTHORIZATION, apiToken.getToken())
-                    .accept(APPLICATION_JSON)
-                    .body(BodyInserters.fromValue(requestBody))
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .map(JSONObject::new)
-                    .map(jsonObject -> jsonObject.getInt("id"))
-                    .map(ProductId::new)
+            return monoCreateProduct(advertisementInformation)
                     .block();
         } catch (Exception e) {
-            throw new AdvertisementFacadeException(format("Error creating product. requestBody=%s", requestBody), e);
+            throw new AdvertisementFacadeException(format("Error creating product. advertisementInformation=%s", advertisementInformation), e);
         }
+    }
+
+    @Override
+    public Mono<ProductId> monoCreateProduct(AdvertisementInformation advertisementInformation) {
+        String requestBody = converter.asJson(advertisementInformation).toString();
+        return client.post()
+                .uri("/products")
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, apiToken.getToken())
+                .accept(APPLICATION_JSON)
+                .body(BodyInserters.fromValue(requestBody))
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(JSONObject::new)
+                .map(jsonObject -> jsonObject.getInt("id"))
+                .map(ProductId::new);
     }
 }
