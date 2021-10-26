@@ -27,7 +27,7 @@ public class AdvertisementInformationFactory {
 
     public AdvertisementInformation fromTemplate(RecordInformation recordInformation) {
         ProductCategory productCategory = recordInformation.getYear()
-                .map(ProductCategory::getDecade)
+                .map(ProductCategory::fromYear)
                 .orElse(ProductCategory.OTHER);
         return AdvertisementInformation.builder()
                 .withAuctionPrice(auctionPrice)
