@@ -1,8 +1,12 @@
 package com.nilsson.vinylrecordsales;
 
+import com.cloudinary.Cloudinary;
 import com.nilsson.vinylrecordsales.advertisement.AdvertisementFacade;
 import com.nilsson.vinylrecordsales.advertisement.AdvertisementFacadeImpl;
 import com.nilsson.vinylrecordsales.domain.*;
+import com.nilsson.vinylrecordsales.image.upload.CloudinaryFactory;
+import com.nilsson.vinylrecordsales.image.upload.ImageUploadFacade;
+import com.nilsson.vinylrecordsales.image.upload.ImageUploadFacadeImpl;
 import com.nilsson.vinylrecordsales.lookup.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,6 +62,21 @@ public class SpringConfiguration {
                                                                  AdvertisementInformationFactory adFactory
     ) {
         return new CreateAdvertisementServiceImpl(lookupService, advertisementFacade, adFactory);
+    }
+
+    @Bean
+    public CloudinaryFactory cloudinaryFactory(Environment environment, ApiTokenFactory apiTokenFactory) {
+        return new CloudinaryFactory(environment, apiTokenFactory.cloudinaryApiToken());
+    }
+
+    @Bean
+    public Cloudinary cloudinary(CloudinaryFactory cloudinaryFactory) {
+        return cloudinaryFactory.get();
+    }
+
+    @Bean
+    public ImageUploadFacade imageUploadFacade(Cloudinary cloudinary) {
+        return new ImageUploadFacadeImpl(cloudinary);
     }
 
 

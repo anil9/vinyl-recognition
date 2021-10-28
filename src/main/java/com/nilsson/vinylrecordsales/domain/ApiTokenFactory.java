@@ -18,4 +18,8 @@ public class ApiTokenFactory {
     public ApiToken selloApiToken() {
         return new ApiToken(environment, ApiTokenProducer.SELLO);
     }
+
+    public ApiToken cloudinaryApiToken() {
+        return new ApiToken(environment, ApiTokenProducer.CLOUDINARY);
+    }
 }
