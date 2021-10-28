@@ -2,10 +2,7 @@ package com.nilsson.vinylrecordsales;
 
 import com.nilsson.vinylrecordsales.advertisement.AdvertisementFacade;
 import com.nilsson.vinylrecordsales.advertisement.AdvertisementFacadeImpl;
-import com.nilsson.vinylrecordsales.domain.AdvertisementInformationConverter;
-import com.nilsson.vinylrecordsales.domain.AdvertisementInformationFactory;
-import com.nilsson.vinylrecordsales.domain.ApiTokenFactory;
-import com.nilsson.vinylrecordsales.domain.WebClientFactory;
+import com.nilsson.vinylrecordsales.domain.*;
 import com.nilsson.vinylrecordsales.lookup.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,8 +38,13 @@ public class SpringConfiguration {
     }
 
     @Bean
-    public AdvertisementInformationFactory advertisementInformationFactory(Environment environment) {
-        return new AdvertisementInformationFactory(environment);
+    public AdvertisementInformationFactory advertisementInformationFactory(Environment environment, ProductCategoryFactory productCategoryFactory) {
+        return new AdvertisementInformationFactory(environment, productCategoryFactory);
+    }
+
+    @Bean
+    public ProductCategoryFactory productCategoryFactory() {
+        return new ProductCategoryFactory();
     }
 
     @Bean

@@ -1,13 +1,14 @@
 package com.nilsson.vinylrecordsales.domain;
 
-import static java.util.Objects.requireNonNull;
-import static org.slf4j.LoggerFactory.getLogger;
+import org.slf4j.Logger;
 
 import java.time.Year;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Supplier;
 
-import org.slf4j.Logger;
+import static java.util.Objects.requireNonNull;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public enum ProductCategory {
 	DECADE_50S_60S(210901),
@@ -15,48 +16,52 @@ public enum ProductCategory {
 	DECADE_80S(210905),
 	DECADE_90S(210907),
 	DECADE_2000(302335),
-	ROCK(210831),
-	POP(340559),
-	JAZZ(210809),
+	ROCK(340414),
+	POP(340634),
+	JAZZ(340511),
 	FOLK(210839),
-	COUNTRY(210805),
+	COUNTRY(340502),
 	CHILDREN(210818),
 	OTHER(210830);
 
 	private final Integer id;
-    private static final Logger LOG = getLogger(ProductCategory.class);
+	private static final Logger LOG = getLogger(ProductCategory.class);
 
 	ProductCategory(Integer id) {
 		this.id = requireNonNull(id, "id");
 	}
 
-	public static ProductCategory fromGenre(String genre) {
-        final Optional<ProductCategory> matchedByInput = Arrays.stream(ProductCategory.values())
-                .filter(productCategory -> productCategory.name().equals(genre.toUpperCase()))
-                .findFirst();
-        if(matchedByInput.isPresent()){
-            return matchedByInput.get();
-        } else if(genre.equals("Children's")){
-		    return CHILDREN;
-        } else {
-            LOG.info("Couldn't match genre {}, returning OTHER", genre);
-            return OTHER;
-        }
+	public static Optional<ProductCategory> fromGenre(String genre) {
+		if (genre.equals("Children's")) {
+			return Optional.of(CHILDREN);
+		}
+
+		return Arrays.stream(ProductCategory.values())
+				.filter(productCategory -> productCategory.name().equals(genre.toUpperCase()))
+				.findFirst()
+				.or(logAndReturnEmpty(genre));
 	}
 
-	public static ProductCategory fromYear(Year year) {
+	private static Supplier<Optional<? extends ProductCategory>> logAndReturnEmpty(String genre) {
+		return () -> {
+			LOG.info("Couldn't match genre {}, returning empty", genre);
+			return Optional.empty();
+		};
+	}
+
+	public static Optional<ProductCategory> fromYear(Year year) {
 		if (year.isAfter(Year.of(1949)) && year.isBefore(Year.of(1970))) {
-			return DECADE_50S_60S;
+			return Optional.of(DECADE_50S_60S);
 		} else if (year.isAfter(Year.of(1969)) && year.isBefore(Year.of(1980))) {
-			return DECADE_70S;
+			return Optional.of(DECADE_70S);
 		} else if (year.isAfter(Year.of(1979)) && year.isBefore(Year.of(1990))) {
-			return DECADE_80S;
+			return Optional.of(DECADE_80S);
 		} else if (year.isAfter(Year.of(1989)) && year.isBefore(Year.of(2000))) {
-			return DECADE_90S;
+			return Optional.of(DECADE_90S);
 		} else if (year.isAfter(Year.of(1999)) && year.isBefore(Year.now().plusYears(1))) {
-			return DECADE_2000;
+			return Optional.of(DECADE_2000);
 		} else {
-			return OTHER;
+			return Optional.empty();
 		}
 
 	}

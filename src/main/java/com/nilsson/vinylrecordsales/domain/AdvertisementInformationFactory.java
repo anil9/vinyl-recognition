@@ -15,20 +15,21 @@ public class AdvertisementInformationFactory {
     private final BigDecimal auctionPrice;
     private final ShippingInformation shippingInformation;
     private final TargetMarketplace targetMarketplace;
+    private final ProductCategoryFactory productCategoryFactory;
 
-    public AdvertisementInformationFactory(Environment environment) {
+    public AdvertisementInformationFactory(Environment environment, ProductCategoryFactory productCategoryFactory) {
+        this.productCategoryFactory = requireNonNull(productCategoryFactory, "productCategoryFactory");
         requireNonNull(environment, "environment");
+        BigDecimal shippingCost = new BigDecimal(environment.getRequiredProperty(SHIPPING_COST.value));
+        this.shippingInformation = new ShippingInformation(ShippingCompany.SCHENKER, shippingCost, PickupStrategy.ALLOW_PICKUP);
         this.folderId = Integer.parseInt(environment.getRequiredProperty(FOLDER_ID.value));
         this.auctionPrice = new BigDecimal(environment.getRequiredProperty(AUCTION_PRICE.value));
         this.targetMarketplace = new TargetMarketplace(environment.getRequiredProperty(MARKETPLACE_ACCOUNT_ID.value));
-        BigDecimal shippingCost = new BigDecimal(environment.getRequiredProperty(SHIPPING_COST.value));
-        this.shippingInformation = new ShippingInformation(ShippingCompany.SCHENKER, shippingCost, PickupStrategy.ALLOW_PICKUP);
     }
 
     public AdvertisementInformation fromTemplate(RecordInformation recordInformation) {
-        ProductCategory productCategory = recordInformation.getYear()
-                .map(ProductCategory::fromYear)
-                .orElse(ProductCategory.OTHER);
+        ProductCategory productCategory = productCategoryFactory.fromRecordInformation(recordInformation);
+
         return AdvertisementInformation.builder()
                 .withAuctionPrice(auctionPrice)
                 .withCondition(Condition.USED)
