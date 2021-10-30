@@ -4,10 +4,16 @@ import com.nilsson.vinylrecordsales.domain.AdvertisementInformation;
 import com.nilsson.vinylrecordsales.domain.AdvertisementInformationConverter;
 import com.nilsson.vinylrecordsales.domain.ApiToken;
 import com.nilsson.vinylrecordsales.domain.ProductId;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.function.Function;
 
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
@@ -51,5 +57,44 @@ public class AdvertisementFacadeImpl implements AdvertisementFacade {
                 .map(JSONObject::new)
                 .map(jsonObject -> jsonObject.getInt("id"))
                 .map(ProductId::new);
+    }
+
+    @Override
+    public Flux<URL> addImagesToProduct(Mono<ProductId> productId, Flux<URL> imageUrls) {
+        String requestBody = converter.asJson(imageUrls).toString();
+
+        return productId.flatMapMany(id -> postImageRequest(id, requestBody));
+
+    }
+
+    private Flux<URL> postImageRequest(ProductId productId, String requestBody) {
+        return client.post()
+                .uri(format("/products/%s/images", productId.getId()))
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, apiToken.getToken())
+                .accept(APPLICATION_JSON)
+                .body(BodyInserters.fromValue(requestBody))
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(JSONObject::new)
+                .map(jsonObject -> jsonObject.getJSONObject("data"))
+                .map(jsonObject -> jsonObject.getJSONArray("images"))
+                .flatMapMany(this::getElements);
+    }
+
+    private Flux<URL> getElements(JSONArray array) {
+        return Flux.range(0, array.length())
+                .map(array::getString)
+                .map(createURL());
+    }
+
+    private Function<String, URL> createURL() {
+        return imageURL -> {
+            try {
+                return new URL(imageURL);
+            } catch (MalformedURLException e) {
+                throw new IllegalStateException(format("Cannot parse URL %s", imageURL), e);
+            }
+        };
     }
 }

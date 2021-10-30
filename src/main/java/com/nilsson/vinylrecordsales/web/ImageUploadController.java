@@ -15,7 +15,6 @@ import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -45,7 +44,7 @@ public class ImageUploadController {
 		model.addAttribute("imageFolderLocation", new ImageFolderLocation());
 		LOG.info("Received image folder location {}", imageFolderLocation.getLocation());
 		File imageDirectory = new File(imageFolderLocation.getLocation());
-		List<File> images = fileService.getImageFilesInDirectoryOrderedByName(imageDirectory).stream().limit(20).collect(Collectors.toList());
+		List<File> images = fileService.getImageFilesInDirectoryOrderedByName(imageDirectory);
 		Flux<URL> urls = imageService.uploadImages(images);
 		imageService.storeURLs(urls);
 		return "redirect:/image";

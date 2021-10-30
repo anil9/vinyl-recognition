@@ -10,16 +10,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CreateAdvertisementServiceImplTest {
+class AdvertisementServiceImplTest {
 
+    private static final ProductId PRODUCT_ID = new ProductId(11);
     @Mock
     private LookupService lookupService;
 
@@ -30,11 +36,11 @@ class CreateAdvertisementServiceImplTest {
     private AdvertisementInformationFactory adFactory;
 
 
-    private CreateAdvertisementServiceImpl createAdvertisementService;
+    private AdvertisementServiceImpl advertisementService;
 
     @BeforeEach
     void setUp() {
-        createAdvertisementService = new CreateAdvertisementServiceImpl(lookupService, advertisementFacade, adFactory);
+        advertisementService = new AdvertisementServiceImpl(lookupService, advertisementFacade, adFactory);
     }
 
     @Test
@@ -46,9 +52,9 @@ class CreateAdvertisementServiceImplTest {
         when(lookupService.getMonoRecordInformationByCatalogueNumber(catalogueNumber)).thenReturn(Mono.just(recordInformation));
         AdvertisementInformation ad = AdvertisementInformationTestBuilder.populatedAdvertisementInformationBuilder().build();
         when(adFactory.fromTemplate(recordInformation.orElseThrow())).thenReturn(ad);
-        when(advertisementFacade.monoCreateProduct(ad)).thenReturn(Mono.just(new ProductId(11)));
+        when(advertisementFacade.monoCreateProduct(ad)).thenReturn(Mono.just(PRODUCT_ID));
         //when
-        createAdvertisementService.createAdvertisement(catalogueNumber);
+        advertisementService.createAdvertisement(catalogueNumber);
         //then
 
         inOrder.verify(lookupService).getMonoRecordInformationByCatalogueNumber(catalogueNumber);
@@ -66,14 +72,29 @@ class CreateAdvertisementServiceImplTest {
         when(lookupService.getMonoRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWord)).thenReturn(Mono.just(recordInformation));
         AdvertisementInformation ad = AdvertisementInformationTestBuilder.populatedAdvertisementInformationBuilder().build();
         when(adFactory.fromTemplate(recordInformation.orElseThrow())).thenReturn(ad);
-        when(advertisementFacade.monoCreateProduct(ad)).thenReturn(Mono.just(new ProductId(11)));
+        when(advertisementFacade.monoCreateProduct(ad)).thenReturn(Mono.just(PRODUCT_ID));
 
         //when
-        createAdvertisementService.createAdvertisement(catalogueNumber, extraTitleWord);
+        advertisementService.createAdvertisement(catalogueNumber, extraTitleWord);
         //then
 
         inOrder.verify(lookupService).getMonoRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWord);
         inOrder.verify(adFactory).fromTemplate(recordInformation.orElseThrow());
         inOrder.verify(advertisementFacade).monoCreateProduct(ad);
+    }
+
+    @Test
+    void callFacadeToAddImagesToProduct() throws MalformedURLException {
+        //given
+        URL anURL = new URL("https://httpstat.us/");
+        URL anotherURL = new URL("https://another-url.us/");
+        final Flux<URL> imageUrls = Flux.just(anURL, anotherURL);
+        when(advertisementFacade.addImagesToProduct(any(), any())).thenReturn(imageUrls);
+        //when
+        final Flux<URL> respondingURLs = advertisementService.addImages(Mono.just(PRODUCT_ID), imageUrls);
+        //then
+        StepVerifier.create(respondingURLs)
+                .expectNext(anURL, anotherURL)
+                .verifyComplete();
     }
 }

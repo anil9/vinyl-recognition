@@ -664,4 +664,151 @@ public class ExampleJsonResponses {
                 """;
     }
 
+    public static String imageAddedToProduct() {
+        return """
+                {
+                    "data": {
+                        "tax_class": null,
+                        "quantity_threshold": null,
+                        "manufacturer": null,
+                        "manufacturer_name": null,
+                        "manufacturer_no": null,
+                        "folder_id": 1102266,
+                        "condition": "used",
+                        "tax": 25,
+                        "id": 64232023,
+                        "group_id": 44898699,
+                        "private_name": "",
+                        "private_reference": "",
+                        "quantity": 1,
+                        "stock_location": "",
+                        "created_at": "2021-10-27T17:51:19.000Z",
+                        "updated_at": "2021-10-27T17:51:19.000Z",
+                        "volume": 0,
+                        "volume_unit": "m3",
+                        "weight": 0,
+                        "purchase_price": 0.5,
+                        "brand_id": null,
+                        "brand_name": null,
+                        "notes": "",
+                        "sold": 0,
+                        "unsold": 0,
+                        "last_sold": null,
+                        "submitter_id": null,
+                        "supplier_id": null,
+                        "supplier_product_number": null,
+                        "source_category": null,
+                        "source": "sello",
+                        "images": [
+                            "https://httpstat.us/"
+                        ],
+                        "image_settings": {
+                            "53501": {
+                                "image_order": [],
+                                "skip": []
+                            }
+                        },
+                        "quantity_ordered": 0,
+                        "texts": {
+                            "53501": {
+                                "sv": {
+                                    "template_id": "3393796",
+                                    "use": "sv"
+                                }
+                            },
+                            "default": {
+                                "sv": {
+                                    "bulletpoints": [],
+                                    "description": "Skick se bilder. Ej provspelad. Kolla gärna in mina andra annonser och passa på att buda in fler LP-skivor, jag samfraktar gärna!<br>Fraktpriser (ca):<br>1 skiva 70 kr<br>2 skivor 73 kr<br>3 skivor 76 kr<br>4 skivor 87 kr<br>5 skivor 99 kr<br>6 skivor 102 kr<br><br>År: 1991<br>Genre: Folk, World, & Country<br>Tracklist:<br>Klang Min Vackra Bjällra <br>Knalle Juls Vals <br>Det Är En Ros Utsprungen <br>Tända Ljus I Alla Fönster <br>Jag Gick Mig Ut En Afton <br>Den Första Julen <br>Jungfrun Hon Går I Dansen <br>Nu Tändas Tusen Juleljus <br>Midnatt Råder <br>Nu Har Vi Ljus-medley <br>Du Tycker Du Är Vacker <br>Stilla Natt (Silent Night Holy Night) ",
+                                    "meta_description": "",
+                                    "meta_keywords": "",
+                                    "name": "Lill Lindfors - En LILLsk Jul",
+                                    "title": ""
+                                }
+                            }
+                        },
+                        "categories": {
+                            "53501": [
+                                {
+                                    "crumb": "Musik > Vinyl > 90-tal",
+                                    "id": "210907",
+                                    "name": "90-tal",
+                                    "path": [
+                                        "0",
+                                        "21",
+                                        "2108",
+                                        "210907"
+                                    ],
+                                    "is_leaf": true
+                                }
+                            ],
+                            "default": {
+                                "crumb": "Musik &gt; Vinyl &gt; 90-tal",
+                                "id": 210907,
+                                "name": "90-tal",
+                                "path": [
+                                    21,
+                                    2108,
+                                    210907
+                                ]
+                            }
+                        },
+                        "prices": {
+                            "53501": {
+                                "auction": {
+                                    "buynow": null,
+                                    "reserve": null,
+                                    "start": 25
+                                },
+                                "currency": "SEK",
+                                "store": null,
+                                "has_campaign": false
+                            },
+                            "default": {
+                                "adjust": false,
+                                "calculate": false,
+                                "minimum_price": null,
+                                "recommended_price": null,
+                                "target_price": null,
+                                "has_campaign": false
+                            }
+                        },
+                        "shipping": {
+                            "53501": {
+                                "bussgods": null,
+                                "dhl": null,
+                                "other": null,
+                                "pickup": true,
+                                "posten": null,
+                                "schenker": "70.00"
+                            }
+                        },
+                        "integrations": {
+                            "53501": {
+                                "active": false,
+                                "extra": "",
+                                "item_id": null,
+                                "quantity": null
+                            }
+                        },
+                        "properties": [],
+                        "delivery_times": {
+                            "default": {
+                                "max": null,
+                                "min": null
+                            }
+                        },
+                        "errors": {
+                            "validation": []
+                        },
+                        "version": "935d99b1d79ea94a75e17cd8c6b31d86a22c3c5756af117ae9d384aa4230b1bb",
+                        "config": {
+                            "replace_images": true
+                        }
+                    },
+                    "statusCode": 200
+                }
+                """;
+    }
+
 }

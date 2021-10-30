@@ -17,8 +17,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.io.IOException;
+import java.net.URL;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,7 +87,7 @@ class AdvertisementFacadeImplTest {
                 .setBody(ExampleJsonResponses.productCreatedResponse())
                 .setResponseCode(HttpStatus.BAD_REQUEST.value())
                 .addHeader("Content-Type", "application/json"));
-        when(converter.asJson(any())).thenReturn(mockedJSON);
+        when(converter.asJson(any(AdvertisementInformation.class))).thenReturn(mockedJSON);
         String expectedJSONRequest = "mockedJson";
         when(mockedJSON.toString()).thenReturn(expectedJSONRequest);
         AdvertisementInformation advertisementInformation = AdvertisementInformationTestBuilder.populatedAdvertisementInformationBuilder()
@@ -92,5 +96,31 @@ class AdvertisementFacadeImplTest {
         AdvertisementFacadeException advertisementFacadeException = assertThrows(AdvertisementFacadeException.class,
                 () -> advertisementFacade.createProduct(advertisementInformation));
         assertThat(advertisementFacadeException.getMessage()).isEqualTo(format("Error creating product. advertisementInformation=%s", advertisementInformation));
+    }
+
+    @Test
+    void shouldAddImages() throws Exception {
+        //given
+        mockBackend.enqueue(new MockResponse()
+                .setBody(ExampleJsonResponses.imageAddedToProduct())
+                .addHeader("Content-Type", "application/json"));
+        final URL expectedURL = new URL("https://httpstat.us/");
+        final Flux<URL> imageUrls = Flux.just(expectedURL);
+        when(converter.asJson(imageUrls)).thenReturn(mockedJSON);
+        String expectedJSONRequest = "mockedJson";
+        when(mockedJSON.toString()).thenReturn(expectedJSONRequest);
+        //when
+        final Flux<URL> urlFlux = advertisementFacade.addImagesToProduct(Mono.just(new ProductId(11)), imageUrls);
+
+        //then
+        StepVerifier.create(urlFlux)
+                .expectNext(expectedURL)
+                .verifyComplete();
+        RecordedRequest recordedRequest = mockBackend.takeRequest();
+        assertThat(recordedRequest.getMethod()).isEqualTo("POST");
+        assertThat(recordedRequest.getPath()).isEqualTo("/products/11/images");
+        assertThat(recordedRequest.getHeader("Authorization")).isEqualTo("secretToken");
+        assertThat(recordedRequest.getBody().readUtf8()).isEqualTo(expectedJSONRequest);
+
     }
 }

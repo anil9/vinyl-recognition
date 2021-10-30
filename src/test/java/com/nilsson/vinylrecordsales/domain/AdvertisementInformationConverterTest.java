@@ -2,10 +2,14 @@ package com.nilsson.vinylrecordsales.domain;
 
 import com.nilsson.vinylrecordsales.advertisement.AdvertisementInformationTestBuilder;
 import org.assertj.core.data.Offset;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
+
+import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +23,7 @@ class AdvertisementInformationConverterTest {
     }
 
     @Test
-    void shouldConvertToJSON() throws JSONException {
+    void shouldConvertAdvertisementToJSON() throws JSONException {
         //given
         AdvertisementInformation ad = AdvertisementInformationTestBuilder.populatedAdvertisementInformationBuilder().build();
         //when
@@ -44,6 +48,24 @@ class AdvertisementInformationConverterTest {
         JSONObject prices = parentJson.getJSONObject("prices").getJSONObject(ad.getTargetMarketplace().getId());
         assertThat(prices.get("currency")).isEqualTo(ad.getCurrency().getCurrencyCode());
         assertThat(prices.getJSONObject("auction").getInt("start")).isEqualTo(ad.getAuctionPrice().intValue());
+
+    }
+
+    @Test
+    void shouldConvertAddImageURLsToJSON() throws Exception {
+        //given
+        final URL anURL = new URL("https://httpstat.us/");
+        final URL anotherURL = new URL("https://another-url.us/");
+
+        //when
+        JSONObject parentJson = converter.asJson(Flux.just(anURL, anotherURL));
+
+        //then
+        final JSONArray urls = parentJson.getJSONArray("urls");
+        assertThat(urls.length()).isEqualTo(2);
+        assertThat(urls.getString(0)).isEqualTo(anURL.toString());
+        assertThat(urls.getString(1)).isEqualTo(anotherURL.toString());
+
 
     }
 }

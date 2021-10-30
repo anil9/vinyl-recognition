@@ -1,6 +1,10 @@
 package com.nilsson.vinylrecordsales.domain;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import reactor.core.publisher.Flux;
+
+import java.net.URL;
 
 public class AdvertisementInformationConverter {
 
@@ -59,5 +63,13 @@ public class AdvertisementInformationConverter {
         defaultText.put("sv", swedishText);
         texts.put("default", defaultText);
         return texts;
+    }
+
+    public JSONObject asJson(Flux<URL> imageUrls) {
+        final JSONArray urls = new JSONArray();
+        imageUrls.subscribe(urls::put);
+        final JSONObject parentJson = new JSONObject();
+        parentJson.put("urls", urls);
+        return parentJson;
     }
 }

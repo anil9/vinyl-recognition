@@ -62,11 +62,11 @@ public class SpringConfiguration {
     }
 
     @Bean
-    public CreateAdvertisementService createAdvertisementService(LookupService lookupService,
-                                                                 AdvertisementFacade advertisementFacade,
-                                                                 AdvertisementInformationFactory adFactory
+    public AdvertisementService createAdvertisementService(LookupService lookupService,
+                                                           AdvertisementFacade advertisementFacade,
+                                                           AdvertisementInformationFactory adFactory
     ) {
-        return new CreateAdvertisementServiceImpl(lookupService, advertisementFacade, adFactory);
+        return new AdvertisementServiceImpl(lookupService, advertisementFacade, adFactory);
     }
 
     @Bean
