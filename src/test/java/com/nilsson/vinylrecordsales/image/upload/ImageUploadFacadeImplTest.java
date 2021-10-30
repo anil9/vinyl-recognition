@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.net.URL;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,12 +44,26 @@ class ImageUploadFacadeImplTest {
         when(cloudinary.uploader()).thenReturn(uploader);
         when(uploader.upload(file, ObjectUtils.emptyMap())).thenReturn(Map.of("any", "thing", "secure_url", secureUrlString));
         //when
-        URL url = imageUploadFacade.uploadImage(file);
+        URL url = imageUploadFacade.uploadImage(file).block();
         //then
         assertThat(url).isEqualTo(new URL(secureUrlString));
         verify(cloudinary).uploader();
         verify(uploader).upload(eq(file), anyMap());
         verifyNoMoreInteractions(cloudinary);
         verifyNoMoreInteractions(uploader);
+    }
+
+    @Test
+    void shouldThrowException() throws IOException {
+        //given
+        String badUrl = "weird5544url";
+        when(cloudinary.uploader()).thenReturn(uploader);
+        when(uploader.upload(file, ObjectUtils.emptyMap())).thenReturn(Map.of("any", "thing", "secure_url", badUrl));
+        //when
+        Mono<URL> urlMono = imageUploadFacade.uploadImage(file);
+        //then
+        assertThrows(IllegalArgumentException.class, urlMono::block);
+
+
     }
 }
