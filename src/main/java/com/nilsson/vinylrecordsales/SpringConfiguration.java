@@ -4,6 +4,11 @@ import com.cloudinary.Cloudinary;
 import com.nilsson.vinylrecordsales.advertisement.AdvertisementFacade;
 import com.nilsson.vinylrecordsales.advertisement.AdvertisementFacadeImpl;
 import com.nilsson.vinylrecordsales.domain.*;
+import com.nilsson.vinylrecordsales.file.FileService;
+import com.nilsson.vinylrecordsales.image.ImageService;
+import com.nilsson.vinylrecordsales.image.ImageServiceImpl;
+import com.nilsson.vinylrecordsales.image.UrlRepository;
+import com.nilsson.vinylrecordsales.image.UrlRepositoryImpl;
 import com.nilsson.vinylrecordsales.image.upload.CloudinaryFactory;
 import com.nilsson.vinylrecordsales.image.upload.ImageUploadFacade;
 import com.nilsson.vinylrecordsales.image.upload.ImageUploadFacadeImpl;
@@ -79,5 +84,20 @@ public class SpringConfiguration {
         return new ImageUploadFacadeImpl(cloudinary);
     }
 
+    @Bean
+    public FileService fileService() {
+        return new FileService();
+    }
+
+    @Bean
+    public UrlRepository urlRepository() {
+        return new UrlRepositoryImpl();
+    }
+
+    @Bean
+    public ImageService imageService(ImageUploadFacade imageUploadFacade, UrlRepository urlRepository) {
+        return new ImageServiceImpl(imageUploadFacade,
+                urlRepository);
+    }
 
 }
