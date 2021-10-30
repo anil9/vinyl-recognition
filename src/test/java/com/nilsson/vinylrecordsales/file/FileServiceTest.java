@@ -38,7 +38,7 @@ class FileServiceTest {
         //given
         File file = File.createTempFile("aFile", ".jpg", folder.toFile());
         //then
-        assertThrows(IllegalArgumentException.class, () -> fileService.getFilesInDirectoryOrderedByName(file));
+        assertThrows(IllegalArgumentException.class, () -> fileService.getImageFilesInDirectoryOrderedByName(file));
     }
 
     @Test
@@ -48,9 +48,22 @@ class FileServiceTest {
         File fileInFirstPosition = File.createTempFile("IMG_20211024_161011", ".jpg", folder.toFile());
         File fileInThirdPosition = File.createTempFile("IMG_20211024_170111", ".jpg", folder.toFile());
         //when
-        List<File> files = fileService.getFilesInDirectoryOrderedByName(folder.toFile());
+        List<File> files = fileService.getImageFilesInDirectoryOrderedByName(folder.toFile());
         //then
         assertThat(files).containsExactly(fileInFirstPosition, fileInSecondPosition, fileInThirdPosition);
+
+    }
+
+    @Test
+    void shouldOnlyGetImageFiles() throws IOException {
+        //given
+        File anImage = File.createTempFile("IMG_20211024_161011", ".jpg", folder.toFile());
+        File pdfFile = File.createTempFile("IMG_20211024_161211", ".pdf", folder.toFile());
+        File anotherImage = File.createTempFile("IMG_20211024_170111", ".jpg", folder.toFile());
+        //when
+        List<File> files = fileService.getImageFilesInDirectoryOrderedByName(folder.toFile());
+        //then
+        assertThat(files).containsExactly(anImage, anotherImage);
 
     }
 }
