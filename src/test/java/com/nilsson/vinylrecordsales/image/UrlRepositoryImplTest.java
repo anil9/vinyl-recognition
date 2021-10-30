@@ -22,26 +22,27 @@ class UrlRepositoryImplTest {
     }
 
     @Test
-    void shouldStoreUrlAtCorrectIndex() {
+    void storeAndPollUrl() {
         //given
 
         //when
-        urlRepository.store(anUrl);
-        URL url = urlRepository.getURLByInsertionOrderIndex(0);
+        urlRepository.add(anUrl);
+        URL url = urlRepository.poll();
         //then
         assertThat(url).isEqualTo(anUrl);
+        assertThat(urlRepository.haveStoredURLs()).isFalse();
 
     }
 
     @Test
-    void shouldStoreUrlsAtCorrectIndex() {
+    void shouldPollUrlInCorrectOrder() {
         //given
 
         //when
-        urlRepository.store(anUrl);
-        urlRepository.store(anotherUrl);
-        URL firstUrl = urlRepository.getURLByInsertionOrderIndex(0);
-        URL secondUrl = urlRepository.getURLByInsertionOrderIndex(1);
+        urlRepository.add(anUrl);
+        urlRepository.add(anotherUrl);
+        URL firstUrl = urlRepository.poll();
+        URL secondUrl = urlRepository.poll();
         //then
         assertThat(firstUrl).isEqualTo(anUrl);
         assertThat(secondUrl).isEqualTo(anotherUrl);
@@ -51,7 +52,7 @@ class UrlRepositoryImplTest {
     @Test
     void haveStoredURLs() {
         //given
-        urlRepository.store(anUrl);
+        urlRepository.add(anUrl);
 
         //when
         //then

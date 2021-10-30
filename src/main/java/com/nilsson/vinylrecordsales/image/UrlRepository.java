@@ -4,9 +4,9 @@ import java.net.URL;
 
 public interface UrlRepository {
 
-    void store(URL exampleFileUrl);
+    void add(URL exampleFileUrl);
 
-    URL getURLByInsertionOrderIndex(int index);
+    URL poll();
 
     boolean haveStoredURLs();
 }

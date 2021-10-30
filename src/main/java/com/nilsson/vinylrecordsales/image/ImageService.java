@@ -12,7 +12,7 @@ public interface ImageService {
 
     void storeURLs(Flux<URL> urls);
 
-    Mono<URL> getURLByInsertionOrderIndex(int order);
+    Mono<URL> pollUrl();
 
     boolean haveStoredURLs();
 }

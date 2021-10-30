@@ -1,24 +1,24 @@
 package com.nilsson.vinylrecordsales.image;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class UrlRepositoryImpl implements UrlRepository {
-    private final List<URL> urls;
+    private final Queue<URL> urls;
 
     public UrlRepositoryImpl() {
-        urls = new ArrayList<>();
+        urls = new LinkedList<>();
     }
 
     @Override
-    public void store(URL url) {
+    public void add(URL url) {
         urls.add(url);
     }
 
     @Override
-    public URL getURLByInsertionOrderIndex(int index) {
-        return urls.get(index);
+    public URL poll() {
+        return urls.poll();
     }
 
     @Override

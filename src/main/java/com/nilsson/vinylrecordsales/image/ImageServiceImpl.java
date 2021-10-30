@@ -30,12 +30,12 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public void storeURLs(Flux<URL> urls) {
-        urls.subscribe(urlRepository::store);
+        urls.subscribe(urlRepository::add);
     }
 
     @Override
-    public Mono<URL> getURLByInsertionOrderIndex(int index) {
-        return Mono.just(urlRepository.getURLByInsertionOrderIndex(index));
+    public Mono<URL> pollUrl() {
+        return Mono.just(urlRepository.poll());
     }
 
     @Override

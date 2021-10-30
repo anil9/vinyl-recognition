@@ -68,7 +68,7 @@ class ImageServiceImplTest {
         imageUploadService.storeURLs(Flux.just(exampleFileUrl));
 
         //then
-        verify(urlRepository).store(exampleFileUrl);
+        verify(urlRepository).add(exampleFileUrl);
         verifyNoMoreInteractions(urlRepository);
         verifyNoInteractions(imageUploadFacade);
     }
@@ -86,18 +86,17 @@ class ImageServiceImplTest {
     void shouldGetUrlByInsertionOrder() throws MalformedURLException {
         //given
         URL exampleFileUrl = new URL(EXAMPLE_FILE_URL);
-        int index = 0;
-        when(urlRepository.getURLByInsertionOrderIndex(index)).thenReturn(exampleFileUrl);
+        when(urlRepository.poll()).thenReturn(exampleFileUrl);
 
         //when
-        Mono<URL> url = imageUploadService.getURLByInsertionOrderIndex(index);
+        Mono<URL> url = imageUploadService.pollUrl();
 
         //then
         StepVerifier.create(url)
                 .expectNext(exampleFileUrl)
                 .verifyComplete();
 
-        verify(urlRepository).getURLByInsertionOrderIndex(index);
+        verify(urlRepository).poll();
         verifyNoInteractions(imageUploadFacade);
     }
 
