@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Image uploader</title>
+</head>
+<body>
+<h1>Upload all images in folder by specifying folder location</h1>
+<form th:action="@{/image}" th:object="${imageFolderLocation}" method="post">
+    <p>Folder location <input type="text" th:field="*{location}"></p>
+    <p><input type="submit" value="Upload all images"></p>
+
+</form>
+</body>
+</html>

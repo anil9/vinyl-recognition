@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 
@@ -97,6 +98,30 @@ class ImageServiceImplTest {
                 .verifyComplete();
 
         verify(urlRepository).getURLByInsertionOrderIndex(index);
+        verifyNoInteractions(imageUploadFacade);
+    }
+
+    @Test
+    void haveStoredURLs() {
+        //given
+        when(urlRepository.haveStoredURLs()).thenReturn(true);
+        //when
+        assertThat(imageUploadService.haveStoredURLs()).isTrue();
+        //then
+        verify(urlRepository).haveStoredURLs();
+        verifyNoMoreInteractions(urlRepository);
+        verifyNoInteractions(imageUploadFacade);
+    }
+
+    @Test
+    void haventStoredURLs() {
+        //given
+        when(urlRepository.haveStoredURLs()).thenReturn(false);
+        //when
+        assertThat(imageUploadService.haveStoredURLs()).isFalse();
+        //then
+        verify(urlRepository).haveStoredURLs();
+        verifyNoMoreInteractions(urlRepository);
         verifyNoInteractions(imageUploadFacade);
     }
 }

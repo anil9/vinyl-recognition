@@ -47,4 +47,24 @@ class UrlRepositoryImplTest {
         assertThat(secondUrl).isEqualTo(anotherUrl);
 
     }
+
+    @Test
+    void haveStoredURLs() {
+        //given
+        urlRepository.store(anUrl);
+
+        //when
+        //then
+        assertThat(urlRepository.haveStoredURLs()).isTrue();
+
+    }
+
+    @Test
+    void haventStoredURLs() {
+        //given
+        //when
+        //then
+        assertThat(urlRepository.haveStoredURLs()).isFalse();
+
+    }
 }

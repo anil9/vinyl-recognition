@@ -20,4 +20,9 @@ public class UrlRepositoryImpl implements UrlRepository {
     public URL getURLByInsertionOrderIndex(int index) {
         return urls.get(index);
     }
+
+    @Override
+    public boolean haveStoredURLs() {
+        return !urls.isEmpty();
+    }
 }

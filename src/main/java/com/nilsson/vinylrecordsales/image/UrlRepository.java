@@ -7,4 +7,6 @@ public interface UrlRepository {
     void store(URL exampleFileUrl);
 
     URL getURLByInsertionOrderIndex(int index);
+
+    boolean haveStoredURLs();
 }

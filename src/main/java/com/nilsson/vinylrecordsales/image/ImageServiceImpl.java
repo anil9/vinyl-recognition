@@ -6,7 +6,6 @@ import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -31,12 +30,18 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public void storeURLs(Flux<URL> urls) {
-        urls.collectList().blockOptional().orElse(Collections.emptyList())
-                .forEach(urlRepository::store);
+        urls.subscribe(urlRepository::store);
     }
 
     @Override
     public Mono<URL> getURLByInsertionOrderIndex(int index) {
         return Mono.just(urlRepository.getURLByInsertionOrderIndex(index));
     }
+
+    @Override
+    public boolean haveStoredURLs() {
+        return urlRepository.haveStoredURLs();
+    }
+
+
 }

@@ -13,4 +13,6 @@ public interface ImageService {
     void storeURLs(Flux<URL> urls);
 
     Mono<URL> getURLByInsertionOrderIndex(int order);
+
+    boolean haveStoredURLs();
 }
