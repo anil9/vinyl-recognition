@@ -22,6 +22,7 @@ public enum ProductCategory {
 	FOLK(210839),
 	COUNTRY(340502),
 	CHILDREN(210818),
+	CLASSICAL(210810),
 	OTHER(210830);
 
 	private final Integer id;
