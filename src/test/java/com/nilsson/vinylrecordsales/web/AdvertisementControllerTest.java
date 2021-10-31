@@ -44,7 +44,7 @@ class AdvertisementControllerTest {
         recordFinder.setCatalogueId("aCatalogueId");
         when(imageService.haveStoredURLs()).thenReturn(true);
         final Mono<ProductId> productId = Mono.just(new ProductId(11));
-        when(advertisementService.monoCreateAdvertisement(recordFinder.getCatalogueId(), null)).thenReturn(productId);
+        when(advertisementService.createAdvertisement(recordFinder.getCatalogueId(), null)).thenReturn(productId);
         final Flux<URL> urls = Flux.just(url, url, url, url, url);
         when(advertisementService.addImages(any(), any())).thenReturn(urls);
         //when
@@ -52,7 +52,7 @@ class AdvertisementControllerTest {
         //then
         verify(imageService).haveStoredURLs();
         verifyNoMoreInteractions(imageService);
-        verify(advertisementService).monoCreateAdvertisement(recordFinder.getCatalogueId(), null);
+        verify(advertisementService).createAdvertisement(recordFinder.getCatalogueId(), null);
         verify(advertisementService).addImages(any(), any());
         verifyNoMoreInteractions(advertisementService);
 
@@ -65,13 +65,13 @@ class AdvertisementControllerTest {
         recordFinder.setCatalogueId("aCatalogueId");
         when(imageService.haveStoredURLs()).thenReturn(true);
         final Mono<ProductId> productId = Mono.empty();
-        when(advertisementService.monoCreateAdvertisement(recordFinder.getCatalogueId(), null)).thenReturn(productId);
+        when(advertisementService.createAdvertisement(recordFinder.getCatalogueId(), null)).thenReturn(productId);
         //when
         advertisementController.createAd(recordFinder, model);
         //then
         verify(imageService).haveStoredURLs();
         verifyNoMoreInteractions(imageService);
-        verify(advertisementService).monoCreateAdvertisement(recordFinder.getCatalogueId(), null);
+        verify(advertisementService).createAdvertisement(recordFinder.getCatalogueId(), null);
         verifyNoMoreInteractions(advertisementService);
 
     }

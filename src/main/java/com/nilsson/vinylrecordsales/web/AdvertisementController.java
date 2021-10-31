@@ -54,7 +54,7 @@ public class AdvertisementController {
         Flux<URL> imageUrls = Flux.range(0, NUMBER_OF_IMAGES_PER_AD)
                 .flatMapSequential(i -> imageService.pollUrl(), MAX_CONCURRENT);
 
-        advertisementService.monoCreateAdvertisement(recordFinder.getCatalogueId(), recordFinder.getExtraTitleWords())
+        advertisementService.createAdvertisement(recordFinder.getCatalogueId(), recordFinder.getExtraTitleWords())
                 .log()
                 .flatMapMany(id -> advertisementService.addImages(Mono.just(id), imageUrls))
                 .subscribe(url -> LOG.info("Stored url on product, url={}", url));

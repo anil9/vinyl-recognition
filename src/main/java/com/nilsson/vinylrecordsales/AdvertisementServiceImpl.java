@@ -24,13 +24,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Override
-    public ProductId createAdvertisement(String catalogueNumber, String... extraTitleWords) {
-        return monoCreateAdvertisement(catalogueNumber, extraTitleWords).block();
-    }
-
-    @Override
-    public Mono<ProductId> monoCreateAdvertisement(String catalogueNumber, String... extraTitleWords) {
-        return lookupService.getMonoRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWords)
+    public Mono<ProductId> createAdvertisement(String catalogueNumber, String... extraTitleWords) {
+        return lookupService.getRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWords)
                 .flatMap(Mono::justOrEmpty)
                 .log()
                 .map(adFactory::fromTemplate)

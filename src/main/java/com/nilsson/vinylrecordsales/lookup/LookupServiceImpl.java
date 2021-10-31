@@ -32,12 +32,8 @@ public class LookupServiceImpl implements LookupService {
     }
 
     @Override
-    public Optional<RecordInformation> getRecordInformationByCatalogueNumber(String catalogueNumber, String... extraTitleWords) {
-        return getMonoRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWords).block();
-    }
-
-    @Override
-    public Mono<Optional<RecordInformation>> getMonoRecordInformationByCatalogueNumber(String catalogueNumber, String... extraTitleWords) {
+    public Mono<Optional<RecordInformation>> getRecordInformationByCatalogueNumber(String catalogueNumber,
+                                                                                   String... extraTitleWords) {
         return lookupFacade.findByCatalogueNumber(catalogueNumber)
                 .map(JsonParser::parseString)
                 .map(JsonElement::getAsJsonObject)

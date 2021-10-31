@@ -7,7 +7,6 @@ import java.util.Optional;
 
 public interface LookupService {
 
-    Optional<RecordInformation> getRecordInformationByCatalogueNumber(String catalogueNumber, String... extraTitleWords);
-
-    Mono<Optional<RecordInformation>> getMonoRecordInformationByCatalogueNumber(String catalogueNumber, String... extraTitleWords);
+    Mono<Optional<RecordInformation>> getRecordInformationByCatalogueNumber(String catalogueNumber,
+                                                                            String... extraTitleWords);
 }

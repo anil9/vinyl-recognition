@@ -44,30 +44,12 @@ class LookupServiceImplTest {
         JsonObject releaseResponse = new Gson().fromJson(releaseInfoResponse, JsonObject.class);
         when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.lookupResponse()));
         when(lookupFacade.getByReleaseId(RELEASE_ID)).thenReturn(Mono.just(releaseInfoResponse));
-        InOrder inOrder = Mockito.inOrder(lookupFacade, recordInformationConverter);
-        //when
-        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER);
-        //then
-        inOrder.verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
-        inOrder.verify(lookupFacade).getByReleaseId(RELEASE_ID);
-
-        verify(recordInformationConverter).getRecordInformation(TITLE, releaseResponse);
-        verifyNoMoreInteractions(lookupFacade);
-        verifyNoMoreInteractions(recordInformationConverter);
-    }
-
-    @Test
-    void shouldReturnRecordInfoMono() {
-        //given
-        String releaseInfoResponse = ExampleJsonResponses.releaseInfo();
-        JsonObject releaseResponse = new Gson().fromJson(releaseInfoResponse, JsonObject.class);
-        when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.lookupResponse()));
-        when(lookupFacade.getByReleaseId(RELEASE_ID)).thenReturn(Mono.just(releaseInfoResponse));
         RecordInformation recordInformation = mock(RecordInformation.class);
         when(recordInformationConverter.getRecordInformation(TITLE, releaseResponse)).thenReturn(Optional.of(recordInformation));
         InOrder inOrder = Mockito.inOrder(lookupFacade, recordInformationConverter);
         //when
-        Mono<Optional<RecordInformation>> informationByCatalogueNumber = lookupService.getMonoRecordInformationByCatalogueNumber(CATALOGUE_NUMBER);
+        Mono<Optional<RecordInformation>> informationByCatalogueNumber =
+                lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER);
         //then
         StepVerifier.create(informationByCatalogueNumber.log())
                 .expectNext(Optional.of(recordInformation))
@@ -84,7 +66,8 @@ class LookupServiceImplTest {
     void shouldReturnEmptyRecordInfoWhenResponseContainsDifferentTitles() {
         when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.ambiguousLookupResponse()));
         //when
-        Optional<RecordInformation> recordInformation = lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER);
+        Optional<RecordInformation> recordInformation =
+                lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER).block();
         //then
         assertThat(recordInformation).isEmpty();
     }
@@ -98,7 +81,7 @@ class LookupServiceImplTest {
         when(lookupFacade.getByReleaseId(RELEASE_ID)).thenReturn(Mono.just(releaseInfoResponse));
         InOrder inOrder = Mockito.inOrder(lookupFacade, recordInformationConverter);
         //when
-        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "Lena", "Philipsson", "Evig");
+        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "Lena", "Philipsson", "Evig").subscribe();
         //then
         inOrder.verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
         inOrder.verify(lookupFacade).getByReleaseId(RELEASE_ID);
@@ -117,7 +100,7 @@ class LookupServiceImplTest {
         when(lookupFacade.getByReleaseId(RELEASE_ID)).thenReturn(Mono.just(releaseInfoResponse));
         InOrder inOrder = Mockito.inOrder(lookupFacade, recordInformationConverter);
         //when
-        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "LeNa", "PhIlIpSsoN", "EVIG");
+        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "LeNa", "PhIlIpSsoN", "EVIG").subscribe();
         //then
         inOrder.verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
         inOrder.verify(lookupFacade).getByReleaseId(RELEASE_ID);
@@ -132,7 +115,8 @@ class LookupServiceImplTest {
         //given
         when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.ambiguousLookupResponse()));
         //when
-        Optional<RecordInformation> recordInformation = lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "fel", "fel2", "fel3");
+        Optional<RecordInformation> recordInformation =
+                lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "fel", "fel2", "fel3").block();
         //then
         verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
         verifyNoMoreInteractions(lookupFacade);
@@ -145,7 +129,8 @@ class LookupServiceImplTest {
         //given
         when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.ambiguousLookupResponse()));
         //when
-        Optional<RecordInformation> recordInformation = lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "Philipsson");
+        Optional<RecordInformation> recordInformation =
+                lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "Philipsson").block();
         //then
         verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
         verifyNoMoreInteractions(lookupFacade);
@@ -158,7 +143,9 @@ class LookupServiceImplTest {
         //given
         when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.ambiguousLookupResponse()));
         //when
-        Optional<RecordInformation> recordInformation = lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "Lena", "Philipsson", "Evig", "fel");
+        Optional<RecordInformation> recordInformation =
+                lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, "Lena", "Philipsson", "Evig"
+                        , "fel").block();
         //then
         verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
         verifyNoMoreInteractions(lookupFacade);
@@ -174,7 +161,7 @@ class LookupServiceImplTest {
         when(lookupFacade.findByCatalogueNumber(CATALOGUE_NUMBER)).thenReturn(Mono.just(ExampleJsonResponses.lookupResponseContainingMasterRelease()));
         when(lookupFacade.getByReleaseId(RELEASE_ID)).thenReturn(Mono.just(releaseInfoResponse));
         //when
-        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER);
+        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER).subscribe();
         //then
         verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
         verify(lookupFacade).getByReleaseId(RELEASE_ID);
@@ -193,7 +180,7 @@ class LookupServiceImplTest {
         when(lookupFacade.getByReleaseId(RELEASE_ID)).thenReturn(Mono.just(releaseInfoResponse));
         String extraTitleWords = "Philipsson";
         //when
-        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, extraTitleWords);
+        lookupService.getRecordInformationByCatalogueNumber(CATALOGUE_NUMBER, extraTitleWords).subscribe();
         //then
         verify(lookupFacade).findByCatalogueNumber(CATALOGUE_NUMBER);
         verify(lookupFacade).getByReleaseId(RELEASE_ID);

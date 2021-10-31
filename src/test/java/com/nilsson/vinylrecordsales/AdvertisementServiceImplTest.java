@@ -49,15 +49,15 @@ class AdvertisementServiceImplTest {
         String catalogueNumber = "catalogueNumber";
         InOrder inOrder = inOrder(lookupService, adFactory, advertisementFacade);
         Optional<RecordInformation> recordInformation = Optional.of(RecordInformationTestBuilder.populatedRecordInformationBuilder().build());
-        when(lookupService.getMonoRecordInformationByCatalogueNumber(catalogueNumber)).thenReturn(Mono.just(recordInformation));
+        when(lookupService.getRecordInformationByCatalogueNumber(catalogueNumber)).thenReturn(Mono.just(recordInformation));
         AdvertisementInformation ad = AdvertisementInformationTestBuilder.populatedAdvertisementInformationBuilder().build();
         when(adFactory.fromTemplate(recordInformation.orElseThrow())).thenReturn(ad);
         when(advertisementFacade.monoCreateProduct(ad)).thenReturn(Mono.just(PRODUCT_ID));
         //when
-        advertisementService.createAdvertisement(catalogueNumber);
+        advertisementService.createAdvertisement(catalogueNumber).subscribe();
         //then
 
-        inOrder.verify(lookupService).getMonoRecordInformationByCatalogueNumber(catalogueNumber);
+        inOrder.verify(lookupService).getRecordInformationByCatalogueNumber(catalogueNumber);
         inOrder.verify(adFactory).fromTemplate(recordInformation.orElseThrow());
         inOrder.verify(advertisementFacade).monoCreateProduct(ad);
     }
@@ -69,16 +69,16 @@ class AdvertisementServiceImplTest {
         InOrder inOrder = inOrder(lookupService, adFactory, advertisementFacade);
         Optional<RecordInformation> recordInformation = Optional.of(RecordInformationTestBuilder.populatedRecordInformationBuilder().build());
         String extraTitleWord = "extra";
-        when(lookupService.getMonoRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWord)).thenReturn(Mono.just(recordInformation));
+        when(lookupService.getRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWord)).thenReturn(Mono.just(recordInformation));
         AdvertisementInformation ad = AdvertisementInformationTestBuilder.populatedAdvertisementInformationBuilder().build();
         when(adFactory.fromTemplate(recordInformation.orElseThrow())).thenReturn(ad);
         when(advertisementFacade.monoCreateProduct(ad)).thenReturn(Mono.just(PRODUCT_ID));
 
         //when
-        advertisementService.createAdvertisement(catalogueNumber, extraTitleWord);
+        advertisementService.createAdvertisement(catalogueNumber, extraTitleWord).subscribe();
         //then
 
-        inOrder.verify(lookupService).getMonoRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWord);
+        inOrder.verify(lookupService).getRecordInformationByCatalogueNumber(catalogueNumber, extraTitleWord);
         inOrder.verify(adFactory).fromTemplate(recordInformation.orElseThrow());
         inOrder.verify(advertisementFacade).monoCreateProduct(ad);
     }
