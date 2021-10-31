@@ -91,7 +91,7 @@ class AdvertisementServiceImplTest {
         final Flux<URL> imageUrls = Flux.just(anURL, anotherURL);
         when(advertisementFacade.addImagesToProduct(any(), any())).thenReturn(imageUrls);
         //when
-        final Flux<URL> respondingURLs = advertisementService.addImages(Mono.just(PRODUCT_ID), imageUrls);
+        final Flux<URL> respondingURLs = advertisementService.addImages(PRODUCT_ID, imageUrls);
         //then
         StepVerifier.create(respondingURLs)
                 .expectNext(anURL, anotherURL)

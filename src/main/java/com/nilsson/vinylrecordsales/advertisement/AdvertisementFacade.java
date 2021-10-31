@@ -12,5 +12,5 @@ public interface AdvertisementFacade {
 
 	Mono<ProductId> monoCreateProduct(AdvertisementInformation advertisementInformation);
 
-	Flux<URL> addImagesToProduct(Mono<ProductId> productId, Flux<URL> imageUrls);
+	Flux<URL> addImagesToProduct(ProductId productId, Flux<URL> imageUrls);
 }

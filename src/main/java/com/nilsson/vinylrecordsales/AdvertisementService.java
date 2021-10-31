@@ -10,5 +10,5 @@ public interface AdvertisementService {
 
     Mono<ProductId> createAdvertisement(String catalogueNumber, String... extraTitleWords);
 
-    Flux<URL> addImages(Mono<ProductId> productId, Flux<URL> imageUrls);
+    Flux<URL> addImages(ProductId productId, Flux<URL> imageUrls);
 }

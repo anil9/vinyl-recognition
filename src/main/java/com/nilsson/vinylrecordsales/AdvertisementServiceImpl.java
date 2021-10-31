@@ -34,7 +34,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Override
-    public Flux<URL> addImages(Mono<ProductId> productId, Flux<URL> imageUrls) {
+    public Flux<URL> addImages(ProductId productId, Flux<URL> imageUrls) {
         return advertisementFacade.addImagesToProduct(productId, imageUrls);
     }
 }

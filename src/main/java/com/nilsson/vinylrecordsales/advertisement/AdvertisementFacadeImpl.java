@@ -60,14 +60,8 @@ public class AdvertisementFacadeImpl implements AdvertisementFacade {
     }
 
     @Override
-    public Flux<URL> addImagesToProduct(Mono<ProductId> productId, Flux<URL> imageUrls) {
+    public Flux<URL> addImagesToProduct(ProductId productId, Flux<URL> imageUrls) {
         String requestBody = converter.asJson(imageUrls).toString();
-
-        return productId.flatMapMany(id -> postImageRequest(id, requestBody));
-
-    }
-
-    private Flux<URL> postImageRequest(ProductId productId, String requestBody) {
         return client.post()
                 .uri(format("/products/%s/images", productId.getId()))
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
@@ -80,6 +74,8 @@ public class AdvertisementFacadeImpl implements AdvertisementFacade {
                 .map(jsonObject -> jsonObject.getJSONObject("data"))
                 .map(jsonObject -> jsonObject.getJSONArray("images"))
                 .flatMapMany(this::getElements);
+
+
     }
 
     private Flux<URL> getElements(JSONArray array) {

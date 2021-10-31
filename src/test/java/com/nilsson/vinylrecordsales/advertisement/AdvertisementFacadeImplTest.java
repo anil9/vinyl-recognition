@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.IOException;
@@ -110,7 +109,7 @@ class AdvertisementFacadeImplTest {
         String expectedJSONRequest = "mockedJson";
         when(mockedJSON.toString()).thenReturn(expectedJSONRequest);
         //when
-        final Flux<URL> urlFlux = advertisementFacade.addImagesToProduct(Mono.just(new ProductId(11)), imageUrls);
+        final Flux<URL> urlFlux = advertisementFacade.addImagesToProduct(new ProductId(11), imageUrls);
 
         //then
         StepVerifier.create(urlFlux)

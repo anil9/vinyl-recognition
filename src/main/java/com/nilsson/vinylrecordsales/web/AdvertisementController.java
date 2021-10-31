@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
@@ -56,7 +55,7 @@ public class AdvertisementController {
 
         advertisementService.createAdvertisement(recordFinder.getCatalogueId(), recordFinder.getExtraTitleWords())
                 .log()
-                .flatMapMany(id -> advertisementService.addImages(Mono.just(id), imageUrls))
+                .flatMapMany(id -> advertisementService.addImages(id, imageUrls))
                 .subscribe(url -> LOG.info("Stored url on product, url={}", url));
 
         return "redirect:/record";
