@@ -30,8 +30,8 @@ class AdvertisementInformationConverterTest {
         JSONObject parentJson = converter.asJson(ad);
         //then
         assertThat(parentJson.get("condition")).isEqualTo(ad.getCondition().getValue());
-        assertThat(parentJson.getInt("quantity")).isEqualTo(ad.getQuantityInStock().getValue());
-        assertThat(parentJson.getInt("tax")).isEqualTo(ad.getTax().getValue());
+        assertThat(parentJson.getInt("quantity")).isEqualTo(ad.getQuantityInStock().value());
+        assertThat(parentJson.getInt("tax")).isEqualTo(ad.getTax().value());
         assertThat(parentJson.getInt("folder_id")).isEqualTo(ad.getFolderId());
         assertThat(parentJson.getDouble("purchase_price")).isCloseTo(ad.getPurchasePrice().doubleValue(), Offset.offset(0.001));
 
@@ -39,13 +39,13 @@ class AdvertisementInformationConverterTest {
         assertThat(textObject.get("name")).isEqualTo(ad.getTitle());
         assertThat(textObject.get("description")).isEqualTo(ad.getDescription().replace("\n", "<br>"));
 
-        JSONObject shipping = parentJson.getJSONObject("shipping").getJSONObject(ad.getTargetMarketplace().getId());
-        assertThat(shipping.getBoolean("pickup")).isEqualTo(ad.getShippingInformation().getPickupStrategy().isPickupAllowed());
-        assertThat(shipping.get(ad.getShippingInformation().getShippingCompany().getValue())).isEqualTo(ad.getShippingInformation().getShippingPrice().toPlainString());
+        JSONObject shipping = parentJson.getJSONObject("shipping").getJSONObject(ad.getTargetMarketplace().id());
+        assertThat(shipping.getBoolean("pickup")).isEqualTo(ad.getShippingInformation().pickupStrategy().isPickupAllowed());
+        assertThat(shipping.get(ad.getShippingInformation().shippingCompany().getValue())).isEqualTo(ad.getShippingInformation().shippingPrice().toPlainString());
 
         assertThat(parentJson.getJSONObject("categories").getJSONObject("default").getInt("id")).isEqualTo(ad.getProductCategory().getId());
 
-        JSONObject prices = parentJson.getJSONObject("prices").getJSONObject(ad.getTargetMarketplace().getId());
+        JSONObject prices = parentJson.getJSONObject("prices").getJSONObject(ad.getTargetMarketplace().id());
         assertThat(prices.get("currency")).isEqualTo(ad.getCurrency().getCurrencyCode());
         assertThat(prices.getJSONObject("auction").getInt("start")).isEqualTo(ad.getAuctionPrice().intValue());
 

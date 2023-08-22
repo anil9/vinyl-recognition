@@ -13,8 +13,8 @@ public class AdvertisementInformationConverter {
         JSONObject parentJson = new JSONObject();
         parentJson.put("folder_id", ad.getFolderId());
         parentJson.put("condition", ad.getCondition().getValue());
-        parentJson.put("tax", ad.getTax().getValue());
-        parentJson.put("quantity", ad.getQuantityInStock().getValue());
+        parentJson.put("tax", ad.getTax().value());
+        parentJson.put("quantity", ad.getQuantityInStock().value());
         parentJson.put("purchase_price", ad.getPurchasePrice().doubleValue());
         parentJson.put("texts", populateTextField(ad));
         parentJson.put("categories", populateCategoriesField(ad));
@@ -27,10 +27,10 @@ public class AdvertisementInformationConverter {
         ShippingInformation shippingInfo = ad.getShippingInformation();
 
         JSONObject marketplaceShipping = new JSONObject();
-        marketplaceShipping.put("pickup", shippingInfo.getPickupStrategy().isPickupAllowed());
-        marketplaceShipping.put(shippingInfo.getShippingCompany().getValue(), shippingInfo.getShippingPrice().toPlainString());
+        marketplaceShipping.put("pickup", shippingInfo.pickupStrategy().isPickupAllowed());
+        marketplaceShipping.put(shippingInfo.shippingCompany().getValue(), shippingInfo.shippingPrice().toPlainString());
         JSONObject targetMarketplaceId = new JSONObject();
-        targetMarketplaceId.put(ad.getTargetMarketplace().getId(), marketplaceShipping);
+        targetMarketplaceId.put(ad.getTargetMarketplace().id(), marketplaceShipping);
 
         return targetMarketplaceId;
     }
@@ -42,7 +42,7 @@ public class AdvertisementInformationConverter {
         marketplacePricing.put("auction", auctionInformation);
         marketplacePricing.put("currency", ad.getCurrency().getCurrencyCode());
         JSONObject targetMarketplaceId = new JSONObject();
-        targetMarketplaceId.put(ad.getTargetMarketplace().getId(), marketplacePricing);
+        targetMarketplaceId.put(ad.getTargetMarketplace().id(), marketplacePricing);
         return targetMarketplaceId;
     }
 
