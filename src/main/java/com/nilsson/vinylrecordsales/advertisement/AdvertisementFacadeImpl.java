@@ -63,7 +63,7 @@ public class AdvertisementFacadeImpl implements AdvertisementFacade {
     public Flux<URL> addImagesToProduct(ProductId productId, Flux<URL> imageUrls) {
         String requestBody = converter.asJson(imageUrls).toString();
         return client.post()
-                .uri(format("/products/%s/images", productId.getId()))
+                .uri(format("/products/%s/images", productId.id()))
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, apiToken.getToken())
                 .accept(APPLICATION_JSON)
